@@ -51,7 +51,7 @@ namespace GameAttempt.Components
             ID = (int)index;
             _current = PlayerState.FALL;
 
-            serviceManager = new ServiceManager(Game);
+            //serviceManager = new ServiceManager(Game);
 
             base.Initialize();
         }
@@ -108,9 +108,9 @@ namespace GameAttempt.Components
 
         public override void Update(GameTime gameTime)
         {
-            Camera camera = serviceManager.GetCameraService();
+            Camera camera = Game.Services.GetService<Camera>();
 
-            camera.FollowCharacter(Sprite.position, GraphicsDevice.Viewport);
+            //camera.FollowCharacter(Sprite.position, GraphicsDevice.Viewport);
             previousPosition = Sprite.position;
             Bounds = new Rectangle((int)Sprite.position.X, (int)Sprite.position.Y, 128, 128);
             GamePadState state = GamePad.GetState(index);

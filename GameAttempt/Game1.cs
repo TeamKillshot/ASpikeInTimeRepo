@@ -17,7 +17,7 @@ namespace GameAttempt
 
         TRender tiles;
         PlayerComponent player;
-
+        ServiceManager serviceManager;
         Song bkgrnd;
 
         public Game1()
@@ -30,8 +30,9 @@ namespace GameAttempt
             graphics.ApplyChanges();
 
             new InputManager(this);
-            player = new PlayerComponent(this);
-            tiles = new TRender(this);
+            serviceManager = new ServiceManager(this);
+            //player = new PlayerComponent(this);
+            //tiles = new TRender(this);
         }
 
         protected override void Initialize()

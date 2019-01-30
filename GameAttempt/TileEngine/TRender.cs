@@ -68,12 +68,12 @@ namespace GameAttempt
 
 		public TRender(Game game) : base(game)
 		{
-
+           
 			game.Components.Add(this);
 			
 			tileManager = new TManager();
 			tSheet = Game.Content.Load<Texture2D>
-										  ("TileSheetOne");    // get TileSheet
+										  ("Sprites/TileSheetOne");    // get TileSheet
 
 			// create a new tile from the TileSheet in list (locX, locY, IndexNum)
 			tRefs.Add(new TRef(0, 9, 0));   // blank space
@@ -108,7 +108,7 @@ namespace GameAttempt
 
 		public override void Initialize()
 		{
-            serviceManager = new ServiceManager(Game);
+            //serviceManager = new ServiceManager(Game);
             base.Initialize();
 		}
 
@@ -116,7 +116,7 @@ namespace GameAttempt
 		{
 			foreach (Tile t in tileManager.ActiveLayer.Impassable)
 			{
-				collisons.Add(new Collider(Game.Content.Load<Texture2D>("Collison"),
+				collisons.Add(new Collider(Game.Content.Load<Texture2D>("Sprites/Collison"),
 							  new Vector2(t.X * t.TileWidth/2, t.Y * t.TileHeight/2), 
 							  new Vector2(t.TileWidth/2, t.TileHeight/2)));
 			}
@@ -130,10 +130,10 @@ namespace GameAttempt
 
 		public override void Draw(GameTime gameTime)
 		{
-            SpriteBatch spriteBatch = serviceManager.GetSpritebatchServices();
-            Camera Cam = serviceManager.GetCameraService();
-			
-			spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Cam.CurrentCamTranslation);
+            SpriteBatch spriteBatch = Game.Services.GetService<SpriteBatch>();
+            Camera Cam = Game.Services.GetService<Camera>();
+
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Cam.CurrentCamTranslation);
 
 			foreach (Tile t in tileManager.ActiveLayer.Tiles)
 			{
