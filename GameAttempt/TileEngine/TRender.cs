@@ -18,8 +18,9 @@ namespace GameAttempt
 		#region Properties
 		TManager tileManager;
 		Texture2D tSheet;
+        Texture2D BGTexture;
         ServiceManager serviceManager;
-		//Camera camera;
+		
 
 		Vector2 ViewportCentre
 		{
@@ -75,6 +76,7 @@ namespace GameAttempt
 			tSheet = Game.Content.Load<Texture2D>
 										  ("Sprites/TileSheetOne");    // get TileSheet
 
+            BGTexture = Game.Content.Load<Texture2D>("Sprites/BackgroundWater"); // Load the Background 
 			// create a new tile from the TileSheet in list (locX, locY, IndexNum)
 			tRefs.Add(new TRef(0, 9, 0));   // blank space
 			tRefs.Add(new TRef(0, 0, 1));   // Ground with grass
@@ -134,8 +136,9 @@ namespace GameAttempt
             Camera Cam = Game.Services.GetService<Camera>();
 
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Cam.CurrentCamTranslation);
-
-			foreach (Tile t in tileManager.ActiveLayer.Tiles)
+            spriteBatch.Draw(BGTexture, Cam.View.Bounds, Color.White);
+            
+            foreach (Tile t in tileManager.ActiveLayer.Tiles)
 			{
 				Vector2 position = new Vector2(t.X * t.TileWidth/2,
 											   t.Y * t.TileHeight/2);

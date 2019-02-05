@@ -69,6 +69,7 @@
     <Content Include="Content\Audio\jump_snd.wav" />
     <Content Include="Content\Audio\step_snd.wav" />
     <Content Include="Content\Sprites\AlienBoss.png" />
+    <Content Include="Content\Sprites\BackgroundWater.png" />
     <Content Include="Content\Sprites\Collison.png" />
     <Content Include="Content\Sprites\MelvinSprSheet.png" />
     <Content Include="Content\Sprites\Mike.png" />
