@@ -110,127 +110,133 @@ namespace GameAttempt.Components
         {
             Camera camera = Game.Services.GetService<Camera>();
 
-            //camera.FollowCharacter(Sprite.position, GraphicsDevice.Viewport);
+            camera.FollowCharacter(Sprite.position, GraphicsDevice.Viewport);
             previousPosition = Sprite.position;
             Bounds = new Rectangle((int)Sprite.position.X, (int)Sprite.position.Y, 128, 128);
             GamePadState state = GamePad.GetState(index);
 
             bool isJumping = false;
             bool isFalling = false;
-            bool isColliding = false;
+            bool isCollided = false;
 
             switch (_current)
             {
                 case PlayerState.FALL:
 
-                    if (!isFalling)
+                    if (tiles.Collision())
+                    {
+                        Sprite.position.Y -= 1;
+                        _current = PlayerState.STILL;
+                        break;
+                    }
+                    else if (!tiles.Collision())
                     {
                         Sprite.position.Y += 5;
-                        isFalling = true;
+                        //isFalling = false;
                         Sprite.position.X += state.ThumbSticks.Left.X * speed;
                     }
-
-                    if (isFalling)
-                    {
-                        foreach (Collider c in tiles.collisons)
-                        {
-                            Rectangle FloorRec = c.collider;
-
-                            if (Bounds.Intersects(FloorRec))
-                            {
-                                Sprite.position = previousPosition;
-                                isColliding = true;
-                                _current = PlayerState.STILL;
-                            }
-                            else
-                            {
-                                c.collisionColor = Color.White;
-                            }
-
-                            if (_current != PlayerState.FALL) break;
-                        }
-                    }
-
                     break;
 
                 case PlayerState.STILL:
-                    if(sndWalkIns.State == SoundState.Playing)
+                    if (!tiles.Collision())
                     {
-                        sndWalkIns.Stop();
+                        if (sndWalkIns.State == SoundState.Playing)
+                        {
+                            sndWalkIns.Stop();
+                        }
+                        if (state.ThumbSticks.Left.X != 0)
+                        {
+                            _current = PlayerState.WALK;
+                        }
+                        if (InputManager.IsButtonPressed(Buttons.A))
+                        {
+                            _current = PlayerState.JUMP;
+                        }
                     }
-                    if (state.ThumbSticks.Left.X != 0)
+                    else if(tiles.Collision())
                     {
-                        _current = PlayerState.WALK;
-                    }
-                    if(InputManager.IsButtonPressed(Buttons.A))
-                    {
-                        _current = PlayerState.JUMP;
+                        _current = PlayerState.FALL;
                     }
                     break;
 
                 case PlayerState.WALK:
-                    Sprite.position.X += state.ThumbSticks.Left.X * speed;
-                    if(sndWalkIns.State != SoundState.Playing)
+
+                    if (tiles.Collision())
                     {
-                        sndWalkIns.Play();
-                        //sndWalkIns.IsLooped = true;
-                    }
-                    if (state.ThumbSticks.Left.X == 0)
-                    {
+                        Sprite.position.Y -= 1;
                         _current = PlayerState.STILL;
+                        break;
                     }
-                    if (state.ThumbSticks.Left.X > 0)
+                    else if (!tiles.Collision())
                     {
-                        s = SpriteEffects.FlipHorizontally;
-                    }
-                    else s = SpriteEffects.None;
-                    if (InputManager.IsButtonPressed(Buttons.A) && !isJumping && !isFalling)
-                    {
-                        _current = PlayerState.JUMP;
-                    }
-                    //if(!isColliding)
-                    //{
-                    //    _current = PlayerState.FALL;
-                    //}
-                    else if (isColliding)
-                    {
-                        _current = PlayerState.STILL;
+                        Sprite.position.X += state.ThumbSticks.Left.X * speed;
+
+                        if (sndWalkIns.State != SoundState.Playing)
+                        {
+                            sndWalkIns.Play();
+                            //sndWalkIns.IsLooped = true;
+                        }
+
+                        if (state.ThumbSticks.Left.X == 0)
+                        {
+                            _current = PlayerState.STILL;
+                        }
+                        if (state.ThumbSticks.Left.X > 0)
+                        {
+                            tiles.effect = SpriteEffects.FlipHorizontally;
+                        }
+                        else tiles.effect = SpriteEffects.None;
+                        if (InputManager.IsButtonPressed(Buttons.A) && !isJumping && !isFalling)
+                        {
+                            _current = PlayerState.JUMP;
+                        }
                     }
                     break;
 
                 case PlayerState.JUMP:
-                    if(!isJumping)
+                    if (!tiles.Collision())
                     {
-                        Sprite.position.Y -= 100;
-                        isJumping = true;
+                        if (!isJumping)
+                        {
+                            Sprite.position.Y -= 120;
+                            Sprite.position.X += state.ThumbSticks.Left.X * speed;
+                            isJumping = true;
+                            _current = PlayerState.FALL;
+                        }
 
-                        if(sndJumpIns.State != SoundState.Playing)
+                        if (sndJumpIns.State != SoundState.Playing)
                         {
                             sndJumpIns.Play();
                             sndJump.Play();
                         }
-                        else if(InputManager.IsButtonReleased(Buttons.A))
+                        else if (InputManager.IsButtonPressed(Buttons.A))
                         {
                             sndJumpIns.Stop();
                         }
-                        _current = PlayerState.FALL;
                     }
+                    else if (tiles.Collision())
+                    {
+                        //Sprite.position.Y -= 1;
+                        _current = PlayerState.FALL;
+                        break;
+                    }
+
                     break;
             }
 
             #region Uneeded?
-    //        if (InputManager.IsKeyHeld(Keys.A))
-    //        {
-				//s = SpriteEffects.None;
-    //            Position -= new Vector2(9, 0);
-    //            _current = PlayerState.WALK;
-    //        }
-    //        if (InputManager.IsKeyHeld(Keys.D))
-    //        {
-				//s = SpriteEffects.FlipHorizontally;
-    //            Position += new Vector2(9, 0);
-    //            _current = PlayerState.WALK;
-    //        }
+            //        if (InputManager.IsKeyHeld(Keys.A))
+            //        {
+            //s = SpriteEffects.None;
+            //            Position -= new Vector2(9, 0);
+            //            _current = PlayerState.WALK;
+            //        }
+            //        if (InputManager.IsKeyHeld(Keys.D))
+            //        {
+            //s = SpriteEffects.FlipHorizontally;
+            //            Position += new Vector2(9, 0);
+            //            _current = PlayerState.WALK;
+            //        }
 
             #endregion
 
