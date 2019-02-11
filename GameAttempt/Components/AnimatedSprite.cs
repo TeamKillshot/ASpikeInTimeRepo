@@ -95,21 +95,7 @@ namespace Components
             BoundingRect = new Rectangle((int)this.position.X, (int)this.position.Y, this.spriteWidth, this.spriteHeight);
 
         }
-        public bool collisionDetect(AnimatedSprite otherSprite)
-        {
-            BoundingRect = new Rectangle((int)this.position.X, (int)this.position.Y, this.spriteWidth, this.spriteHeight);
-            Rectangle otherBound = new Rectangle((int)otherSprite.position.X, (int)otherSprite.position.Y, otherSprite.spriteWidth, this.spriteHeight);
-            if (BoundingRect.Intersects(otherBound))
-            {
-                InCollision = true;
-                return true;
-            }
-            else
-            {
-                InCollision = false;
-                return false;
-            }
-        }
+
         // Added code for movement and to spot horizontal effect
         // Note assumes right facing sprite to begin
 

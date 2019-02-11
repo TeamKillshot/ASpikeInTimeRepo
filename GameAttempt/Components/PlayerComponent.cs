@@ -15,11 +15,10 @@ namespace GameAttempt.Components
     public class PlayerComponent : DrawableGameComponent
     {
         //Properties
-        Vector2 previousPosition { get; set; }
         AnimatedSprite Sprite { get; set; }
         public int ID { get; set; }
-		SpriteEffects s;
-        ServiceManager serviceManager;
+		//SpriteEffects s;
+        //ServiceManager serviceManager;
 
         //variables
         int speed;
@@ -27,6 +26,7 @@ namespace GameAttempt.Components
         PlayerIndex index;
         Texture2D PlayerRect;
         Vector2 Position;
+        Vector2 previousPosition;
         public Rectangle Bounds;
         //Camera camera;
 
@@ -47,6 +47,8 @@ namespace GameAttempt.Components
         public override void Initialize()
         {
             Position = new Vector2(200, 300);
+            Bounds = new Rectangle(Position.ToPoint(), new Point(64, 64));
+            //Position = Sprite.position;
             speed = 9;
             ID = (int)index;
             _current = PlayerState.FALL;
@@ -115,30 +117,56 @@ namespace GameAttempt.Components
             Bounds = new Rectangle((int)Sprite.position.X, (int)Sprite.position.Y, 128, 128);
             GamePadState state = GamePad.GetState(index);
 
+            bool bottomHasCollided = false;
+            bool sidesHaveCollided = false;
+
+            if(tiles.BottomCollision())
+            {
+                bottomHasCollided = true;
+            }
+            else if(!tiles.BottomCollision())
+            {
+                bottomHasCollided = false;
+            }
+
+            if(tiles.SideCollision())
+            {
+                sidesHaveCollided = true;
+            }
+            else if(!tiles.SideCollision())
+            {
+                sidesHaveCollided = false;
+            }
+
             bool isJumping = false;
             bool isFalling = false;
-            bool isCollided = false;
 
             switch (_current)
             {
                 case PlayerState.FALL:
 
-                    if (tiles.Collision())
+                    if (bottomHasCollided)
                     {
-                        Sprite.position.Y -= 1;
-                        _current = PlayerState.STILL;
+                        Sprite.position.Y = previousPosition.Y;
+                        if (state.ThumbSticks.Left.X == 0)
+                        {
+                            _current = PlayerState.STILL;
+                        }
+                        else
+                        {
+                            _current = PlayerState.WALK;
+                        }
                         break;
                     }
-                    else if (!tiles.Collision())
+                    else if (!bottomHasCollided)
                     {
                         Sprite.position.Y += 5;
-                        //isFalling = false;
                         Sprite.position.X += state.ThumbSticks.Left.X * speed;
                     }
                     break;
 
                 case PlayerState.STILL:
-                    if (!tiles.Collision())
+                    if (bottomHasCollided)
                     {
                         if (sndWalkIns.State == SoundState.Playing)
                         {
@@ -153,48 +181,56 @@ namespace GameAttempt.Components
                             _current = PlayerState.JUMP;
                         }
                     }
-                    else if(tiles.Collision())
+                    else if(!bottomHasCollided)
+                    {
+                        _current = PlayerState.FALL;
+                        break;
+                    }
+                    break;
+
+                case PlayerState.WALK:
+                    if (bottomHasCollided)
+                    {
+                        if(sidesHaveCollided)
+                        {
+                            Sprite.position.X = previousPosition.X;
+                            _current = PlayerState.STILL;
+                        }
+                        else if(!sidesHaveCollided)
+                        {
+                            Sprite.position.X += state.ThumbSticks.Left.X * speed;
+
+                            if (sndWalkIns.State != SoundState.Playing)
+                            {
+                                sndWalkIns.Play();
+                                //sndWalkIns.IsLooped = true;
+                            }
+
+                            if (state.ThumbSticks.Left.X == 0)
+                            {
+                                _current = PlayerState.STILL;
+                                break;
+                            }
+                            if (state.ThumbSticks.Left.X > 0)
+                            {
+                                tiles.effect = SpriteEffects.FlipHorizontally;
+                            }
+                            else tiles.effect = SpriteEffects.None;
+                            if (InputManager.IsButtonPressed(Buttons.A) && !isJumping && !isFalling)
+                            {
+                                _current = PlayerState.JUMP;
+                            }
+                        }
+                        break;
+                    }
+                    else if (!bottomHasCollided)
                     {
                         _current = PlayerState.FALL;
                     }
                     break;
 
-                case PlayerState.WALK:
-
-                    if (tiles.Collision())
-                    {
-                        Sprite.position.Y -= 1;
-                        _current = PlayerState.STILL;
-                        break;
-                    }
-                    else if (!tiles.Collision())
-                    {
-                        Sprite.position.X += state.ThumbSticks.Left.X * speed;
-
-                        if (sndWalkIns.State != SoundState.Playing)
-                        {
-                            sndWalkIns.Play();
-                            //sndWalkIns.IsLooped = true;
-                        }
-
-                        if (state.ThumbSticks.Left.X == 0)
-                        {
-                            _current = PlayerState.STILL;
-                        }
-                        if (state.ThumbSticks.Left.X > 0)
-                        {
-                            tiles.effect = SpriteEffects.FlipHorizontally;
-                        }
-                        else tiles.effect = SpriteEffects.None;
-                        if (InputManager.IsButtonPressed(Buttons.A) && !isJumping && !isFalling)
-                        {
-                            _current = PlayerState.JUMP;
-                        }
-                    }
-                    break;
-
                 case PlayerState.JUMP:
-                    if (!tiles.Collision())
+                    if (!bottomHasCollided)
                     {
                         if (!isJumping)
                         {
@@ -214,9 +250,9 @@ namespace GameAttempt.Components
                             sndJumpIns.Stop();
                         }
                     }
-                    else if (tiles.Collision())
+                    else if (bottomHasCollided)
                     {
-                        //Sprite.position.Y -= 1;
+                        Sprite.position.Y -= 1;
                         _current = PlayerState.FALL;
                         break;
                     }
@@ -252,16 +288,16 @@ namespace GameAttempt.Components
             switch(_current)
             {
                 case PlayerState.STILL:
-                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.sourceRectangle, Color.White, 0f, Vector2.Zero, s, 0f);
+                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.sourceRectangle, Color.White, 0f, Vector2.Zero, tiles.effect, 0f);
                     break;
                 case PlayerState.JUMP:
-                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.sourceRectangle, Color.White, 0f, Vector2.Zero, s, 0f);
+                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.sourceRectangle, Color.White, 0f, Vector2.Zero, tiles.effect, 0f);
                     break;
                 case PlayerState.WALK:
-                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.sourceRectangle, Color.White, 0f, Vector2.Zero, s, 0f);
+                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.sourceRectangle, Color.White, 0f, Vector2.Zero, tiles.effect, 0f);
                     break;
                 case PlayerState.FALL:
-                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.sourceRectangle, Color.White, 0f, Vector2.Zero, s, 0f);
+                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.sourceRectangle, Color.White, 0f, Vector2.Zero, tiles.effect, 0f);
                     break;
             }
             spriteBatch.End();
