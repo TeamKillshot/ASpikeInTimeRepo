@@ -13,10 +13,6 @@ namespace GameAttempt
     public class Game1 : Game
     {
         GraphicsDeviceManager graphics;
-        //SpriteBatch spriteBatch;
-
-        TRender tiles;
-        PlayerComponent player;
         ServiceManager serviceManager;
         Song bkgrnd;
 
@@ -46,7 +42,7 @@ namespace GameAttempt
         protected override void LoadContent()
         {
             bkgrnd = Content.Load<Song>("Audio/GreenGrave_mp3");
-
+            MediaPlayer.Volume = .5f;
             if (bkgrnd != null)
             {
                 MediaPlayer.Play(bkgrnd);

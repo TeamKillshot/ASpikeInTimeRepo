@@ -19,8 +19,7 @@ namespace GameAttempt.Components
         AnimatedSprite Sprite { get; set; }
         public int ID { get; set; }
 		SpriteEffects s;
-        ServiceManager serviceManager;
-
+       
         //variables
         int speed;
         TRender tiles;
@@ -42,6 +41,7 @@ namespace GameAttempt.Components
             GamePad.GetState(index);
             game.Components.Add(this);
             tiles = new TRender(game);
+            DrawOrder = 1;
         }
 
         public override void Initialize()
@@ -50,8 +50,6 @@ namespace GameAttempt.Components
             speed = 9;
             ID = (int)index;
             _current = PlayerState.FALL;
-
-            //serviceManager = new ServiceManager(Game);
 
             base.Initialize();
         }
@@ -110,7 +108,7 @@ namespace GameAttempt.Components
         {
             Camera camera = Game.Services.GetService<Camera>();
 
-            //camera.FollowCharacter(Sprite.position, GraphicsDevice.Viewport);
+            camera.FollowCharacter(Sprite.position, GraphicsDevice.Viewport);
             previousPosition = Sprite.position;
             Bounds = new Rectangle((int)Sprite.position.X, (int)Sprite.position.Y, 128, 128);
             GamePadState state = GamePad.GetState(index);
@@ -129,6 +127,7 @@ namespace GameAttempt.Components
                         isFalling = true;
                         Sprite.position.X += state.ThumbSticks.Left.X * speed;
                     }
+                   
 
                     if (isFalling)
                     {
@@ -219,18 +218,18 @@ namespace GameAttempt.Components
             }
 
             #region Uneeded?
-    //        if (InputManager.IsKeyHeld(Keys.A))
-    //        {
-				//s = SpriteEffects.None;
-    //            Position -= new Vector2(9, 0);
-    //            _current = PlayerState.WALK;
-    //        }
-    //        if (InputManager.IsKeyHeld(Keys.D))
-    //        {
-				//s = SpriteEffects.FlipHorizontally;
-    //            Position += new Vector2(9, 0);
-    //            _current = PlayerState.WALK;
-    //        }
+            //if (InputManager.IsKeyPressed(Keys.A))
+            //{
+            //    s = SpriteEffects.None;
+            //    Position -= new Vector2(9, 0);
+            //    _current = PlayerState.WALK;
+            //}
+            //if (InputManager.IsKeyPressed(Keys.D))
+            //{
+            //    s = SpriteEffects.FlipHorizontally;
+            //    Position += new Vector2(9, 0);
+            //    _current = PlayerState.WALK;
+            //}
 
             #endregion
 

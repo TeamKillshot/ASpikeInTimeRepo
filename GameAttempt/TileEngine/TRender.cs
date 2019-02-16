@@ -81,7 +81,7 @@ namespace GameAttempt
 			tRefs.Add(new TRef(0, 9, 0));   // blank space
 			tRefs.Add(new TRef(0, 0, 1));   // Ground with grass
 			tRefs.Add(new TRef(0, 1, 2));   // Ground 
-
+           
 			string[] tNames = { "Empty", "Ground1", "Ground2"}; // names of tiles
 			
 			string[] impassableTiles = { "Ground1", "Ground2" };
@@ -136,7 +136,8 @@ namespace GameAttempt
             Camera Cam = Game.Services.GetService<Camera>();
 
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Cam.CurrentCamTranslation);
-            spriteBatch.Draw(BGTexture, Cam.View.Bounds, Color.White);
+
+            spriteBatch.Draw(BGTexture, new Rectangle(Cam.View.Bounds.X, Cam.View.Bounds.Y, tsWidth * tileMap.GetLength(0), tileMap.GetLength(1) * 25 ), null ,Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0f);
             
             foreach (Tile t in tileManager.ActiveLayer.Tiles)
 			{

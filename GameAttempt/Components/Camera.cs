@@ -15,7 +15,7 @@ namespace GameAttempt
 		Vector2 worldBound;
 		Viewport view;
 		float scale = 1f;
-		int camMovSpeed = 10;
+		
 		public float Scale
 		{
 			get  { return scale; }

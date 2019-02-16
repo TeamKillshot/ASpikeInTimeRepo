@@ -18,17 +18,28 @@ namespace Managers
         SpriteBatch spriteBatch;
 
         public ServiceManager(Game game) : base(game)
-        {        
-            
+        {
+            int MapDebug = 1;
             spriteBatch = new SpriteBatch(game.GraphicsDevice);
             tiles = new TRender(game);
-            camera = new Camera(Vector2.Zero,
-                new Vector2(tiles.tileMap.GetLength(1) * tiles.tsWidth,
-                 tiles.tileMap.GetLength(0) * tiles.tsHeight),
-                    tiles.GraphicsDevice.Viewport);            
+            if (MapDebug == 1)
+            {
+                camera = new Camera(Vector2.Zero, 
+                         new Vector2(tiles.tileMap.GetLength(1) * tiles.tsWidth, 
+                         tiles.tileMap.GetLength(0)) * tiles.tsHeight,
+                         tiles.GraphicsDevice.Viewport);
+            }
+            else
+            {
+                camera = new Camera(Vector2.Zero,
+                    new Vector2(tiles.tileMap.GetLength(1) * tiles.tsWidth,
+                     tiles.tileMap.GetLength(0) * tiles.tsHeight),
+                        tiles.GraphicsDevice.Viewport);
+            }
+            
             player = new PlayerComponent(game);
 
-            AddToServices(); // Werent Calling the Set service Method
+            AddToServices();
         }
 
         public void AddToServices()
