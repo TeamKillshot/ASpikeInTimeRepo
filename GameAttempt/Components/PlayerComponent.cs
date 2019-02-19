@@ -76,12 +76,12 @@ namespace GameAttempt.Components
             {
                 default:
                     Sprite = new AnimatedSprite(Game,
-                        Game.Content.Load<Texture2D>("Sprites/CharacterSpriteSheet"), Position, 11, Bounds);
+                        Game.Content.Load<Texture2D>("Sprites/SpikeSprSheet"), Position, 11, Bounds);
                     break;
 
                 case PlayerIndex.One:
                     Sprite = new AnimatedSprite(Game, 
-                        Game.Content.Load<Texture2D>("Sprites/SprSheet"), Position, 11, Bounds);
+                        Game.Content.Load<Texture2D>("Sprites/SpikeSprSheet"), Position, 11, Bounds);
                     ID = 1;
                     break;
 
@@ -110,12 +110,26 @@ namespace GameAttempt.Components
         public override void Update(GameTime gameTime)
         {
             Camera camera = Game.Services.GetService<Camera>();
+            previousPosition = Position;
 
             camera.FollowCharacter(Sprite.position, GraphicsDevice.Viewport);
             previousPosition = Sprite.position;
             Bounds = new Rectangle((int)Sprite.position.X, (int)Sprite.position.Y, 128, 128);
             GamePadState state = GamePad.GetState(index);
             //CollisionDetection.CheckCollision();
+
+            var collisionSet = tiles.collisons.Where(c => c.collider.Intersects(Bounds)).ToList();
+
+            foreach (Collider c in collisionSet)
+            {
+                c.collisionColor = Color.Red;
+
+                if(collisionSet.Count <= 0)
+                {
+                    _current = PlayerState.FALL;
+                    break;
+                }
+            }
 
             bool isJumping = false;
             bool isFalling = false;
@@ -127,7 +141,7 @@ namespace GameAttempt.Components
 
                     if (tiles.Collision())
                     {
-                        Sprite.position.Y -= 1;
+                        //Sprite.position.Y -= 1;
                         _current = PlayerState.STILL;
                         break;
                     }
@@ -165,7 +179,7 @@ namespace GameAttempt.Components
 
                     if (tiles.Collision())
                     {
-                        Sprite.position.Y -= 1;
+                        //Sprite.position.Y -= 1;
                         _current = PlayerState.STILL;
                         break;
                     }
