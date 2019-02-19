@@ -15,18 +15,19 @@ namespace GameAttempt.Components
     public class PlayerComponent : DrawableGameComponent
     {
         //Properties
-        Vector2 previousPosition { get; set; }
         AnimatedSprite Sprite { get; set; }
         public int ID { get; set; }
 		SpriteEffects s;
         ServiceManager serviceManager;
+        CollisionDetection collision;
 
         //variables
         int speed;
         TRender tiles;
         PlayerIndex index;
         Texture2D PlayerRect;
-        Vector2 Position;
+        public Vector2 previousPosition;
+        public Vector2 Position;
         public Rectangle Bounds;
         //Camera camera;
 
@@ -114,6 +115,7 @@ namespace GameAttempt.Components
             previousPosition = Sprite.position;
             Bounds = new Rectangle((int)Sprite.position.X, (int)Sprite.position.Y, 128, 128);
             GamePadState state = GamePad.GetState(index);
+            //CollisionDetection.CheckCollision();
 
             bool isJumping = false;
             bool isFalling = false;
