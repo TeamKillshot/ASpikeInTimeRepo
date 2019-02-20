@@ -20,6 +20,11 @@ namespace GameAttempt.Components
         //ServiceManager serviceManager;
 
         //variables
+        Rectangle collisionRect;
+        float distance;
+        float playerRightSideDistance;
+        float playerLeftSideDistance;
+        SpriteFont font;
         int speed;
         TRender tiles;
         PlayerIndex index;
@@ -70,6 +75,8 @@ namespace GameAttempt.Components
             sndWalkIns2 = sndWalk2.CreateInstance();
             sndWalkIns2.Volume = 1.0f;
 
+            font = Game.Content.Load<SpriteFont>("font");
+
             switch (index)
             {
                 default:
@@ -111,55 +118,61 @@ namespace GameAttempt.Components
 
             camera.FollowCharacter(Sprite.position, GraphicsDevice.Viewport);
             Bounds = new Rectangle((int)Sprite.position.X, (int)Sprite.position.Y, 128, 128);
+            collisionRect = new Rectangle(Bounds.Location.X, Bounds.Location.Y, Bounds.Width, Bounds.Height + 5);
             GamePadState state = GamePad.GetState(index);
 
-            previousPosition = Sprite.position - new Vector2(0,3f);
+            previousPosition = Sprite.position /*- new Vector2(0,1f)*/;
+
+            var newCollisions = tiles.collisons.Where(c => c.collider.Intersects(collisionRect)).ToList();
             //all tiles that are in collision with player bounds
             var collisionSet = tiles.collisons.Where(c => c.collider.Intersects(Bounds)).ToList();
 
-            for (int i = 0; i < collisionSet.Count - 1; i++)
-            {
-                //change color of collider rectangle to red
-                collisionSet[i].collisionColor = Color.Red;
+            //for (int i = 0; i < collisionSet.Count - 1; i++)
+            //{
+            //    //change color of collider rectangle to red
+            //    collisionSet[i].collisionColor = Color.Red;
 
-                //distance between tiles collider top and player bounds bottom
-                float distance = Bounds.Bottom - collisionSet[i].collider.Top;
+            //    //distance between tiles collider top and player bounds bottom
+            //    //distance = Bounds.Bottom - collisionSet[i].collider.Top;
 
-                if (distance > 0)
-                {
-                    //move player back up
-                    Sprite.position.Y = previousPosition.Y;
-                    _current = PlayerState.STILL;
-                    break;
-                }
-                else
-                {
-                    _current = PlayerState.FALL;
-                }
+            //    if (distance > 0)
+            //    {
+            //        //move player back up
+            //        Sprite.position.Y = previousPosition.Y;
+            //        _current = PlayerState.STILL;
+            //        break;
+            //    }
+            //    else
+            //    {
+            //        _current = PlayerState.FALL;
+            //    }
 
-                if (collisionSet[i].collider.Top <= Bounds.Bottom)
-                {
-                    Sprite.position = previousPosition;
-                    _current = PlayerState.STILL;
-                    break;
-                }
-                else
-                {
-                    collisionSet[i].collisionColor = Color.White;
+            //    if (collisionSet[i].collider.Top <= Bounds.Bottom)
+            //    {
+            //        Sprite.position = previousPosition;
+            //        _current = PlayerState.STILL;
+            //        break;
+            //    }
+            //    else
+            //    {
+            //        collisionSet[i].collisionColor = Color.White;
 
-                    _current = PlayerState.FALL;
-                }
+            //        _current = PlayerState.FALL;
+            //    }
 
-                if (collisionSet[i].collider.Right <= Bounds.Left || collisionSet[i].collider.Left >= Bounds.Right)
-                {
-                    Sprite.position.X = previousPosition.X;
-                    _current = PlayerState.STILL;
-                }
-                break;
-            }
+            //    if (collisionSet[i].collider.Right <= Bounds.Left || collisionSet[i].collider.Left >= Bounds.Right)
+            //    {
+            //        Sprite.position.X = previousPosition.X;
+            //        _current = PlayerState.STILL;
+            //    }
+            //    break;
+            //}
 
             bool isJumping = false;
             bool isFalling = false;
+
+            bool hasCollidedLeft = false;
+            bool hasCollidedRight = false;
 
             switch (_current)
             {
@@ -167,6 +180,17 @@ namespace GameAttempt.Components
 
                     Sprite.position.Y += 5;
                     Sprite.position.X += state.ThumbSticks.Left.X * speed;
+
+                    for (int i = 0; i < newCollisions.Count - 1; i++)
+                    {
+                        distance = collisionRect.Bottom - newCollisions[i].collider.Top;
+
+                        if (distance > 0)
+                        {
+                            Sprite.position.Y = previousPosition.Y;
+                            _current = PlayerState.STILL;
+                        }
+                    }
 
                 break;
 
@@ -190,8 +214,37 @@ namespace GameAttempt.Components
                 case PlayerState.WALK:
 
                     Sprite.position.X += state.ThumbSticks.Left.X * speed;
+                    //previousPosition = Sprite.position - new Vector2(35, 0);
 
-                    //if(collisionSet)
+                    if (newCollisions.Count <= 0)
+                    {
+                        _current = PlayerState.FALL;
+                        break;
+                    }
+
+                    for (int i = 0; i < collisionSet.Count - 1; i++)
+                    {
+                        playerRightSideDistance = Bounds.Right - collisionSet[i].collider.Left;
+                        playerLeftSideDistance = Bounds.Left - collisionSet[i].collider.Right;
+
+                        if (playerRightSideDistance >= 100 && playerLeftSideDistance <= 0)
+                        {
+                            Sprite.position.X = previousPosition.X + 25;
+                            _current = PlayerState.STILL;
+                            break;
+                        }
+                        else if(playerRightSideDistance <= 99 && playerRightSideDistance >= 0)
+                        {
+                            Sprite.position.X = previousPosition.X - 25;
+                            _current = PlayerState.STILL;
+                            break;
+                        }
+                    }
+
+                    for (int i = 0; i < newCollisions.Count - 1; i++)
+                    {
+                        Sprite.position.Y = previousPosition.Y;
+                    }
 
                     if (sndWalkIns.State != SoundState.Playing)
                     {
@@ -280,6 +333,12 @@ namespace GameAttempt.Components
                     spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.sourceRectangle, Color.White, 0f, Vector2.Zero, tiles.effect, 0f);
                     break;
             }
+            spriteBatch.DrawString(font, _current.ToString(), new Vector2(100, 200), Color.Black);
+            spriteBatch.DrawString(font, Bounds.ToString(), new Vector2(100, 220), Color.Black);
+            spriteBatch.DrawString(font, collisionRect.ToString(), new Vector2(400, 220), Color.Black);
+            spriteBatch.DrawString(font, distance.ToString(), new Vector2(100, 240), Color.Black);
+            spriteBatch.DrawString(font, playerRightSideDistance.ToString(), new Vector2(220, 240), Color.Black);
+            spriteBatch.DrawString(font, playerLeftSideDistance.ToString(), new Vector2(340, 240), Color.Black);
             spriteBatch.End();
 
             base.Draw(gameTime);
