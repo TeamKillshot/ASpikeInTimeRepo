@@ -44,7 +44,6 @@
   <ItemGroup>
     <Compile Include="Components\Camera.cs" />
     <Compile Include="Components\AnimatedSprite.cs" />
-    <Compile Include="Components\CollisionDetection.cs" />
     <Compile Include="Managers\InputManager.cs" />
     <Compile Include="Components\PlayerComponent.cs" />
     <Compile Include="Game1.cs" />

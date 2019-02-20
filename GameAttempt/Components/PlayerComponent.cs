@@ -17,9 +17,7 @@ namespace GameAttempt.Components
         //Properties
         AnimatedSprite Sprite { get; set; }
         public int ID { get; set; }
-		SpriteEffects s;
-        ServiceManager serviceManager;
-        CollisionDetection collision;
+        //ServiceManager serviceManager;
 
         //variables
         int speed;
@@ -36,7 +34,7 @@ namespace GameAttempt.Components
 
         //PlayerStates
         public enum PlayerState { STILL, WALK, JUMP, FALL }
-        PlayerState _current;
+        public PlayerState _current;
 
         public PlayerComponent(Game game): base(game)
         {
@@ -110,134 +108,117 @@ namespace GameAttempt.Components
         public override void Update(GameTime gameTime)
         {
             Camera camera = Game.Services.GetService<Camera>();
-            previousPosition = Position;
 
             camera.FollowCharacter(Sprite.position, GraphicsDevice.Viewport);
-            previousPosition = Sprite.position;
             Bounds = new Rectangle((int)Sprite.position.X, (int)Sprite.position.Y, 128, 128);
             GamePadState state = GamePad.GetState(index);
-            //CollisionDetection.CheckCollision();
+            previousPosition = Sprite.position - new Vector2(0,0.1f);
 
             var collisionSet = tiles.collisons.Where(c => c.collider.Intersects(Bounds)).ToList();
 
-            foreach (Collider c in collisionSet)
+            for (int i = 0; i < collisionSet.Count - 1; i++)
             {
-                c.collisionColor = Color.Red;
+                collisionSet[i].collisionColor = Color.Red;
 
-                if(collisionSet.Count <= 0)
+                if(collisionSet[i].collider.Top <= Bounds.Bottom)
                 {
-                    _current = PlayerState.FALL;
+                    Sprite.position = previousPosition;
+                    _current = PlayerState.STILL;
                     break;
                 }
+                else
+                {
+                    _current = PlayerState.FALL;
+                }
+
+                if (collisionSet[i].collider.Right <= Bounds.Left || collisionSet[i].collider.Left >= Bounds.Right)
+                {
+                    Position.X = previousPosition.X;
+                    _current = PlayerState.STILL;
+                }
+                break;
             }
 
             bool isJumping = false;
             bool isFalling = false;
-            bool isCollided = false;
 
             switch (_current)
             {
                 case PlayerState.FALL:
 
-                    if (tiles.Collision())
-                    {
-                        //Sprite.position.Y -= 1;
-                        _current = PlayerState.STILL;
-                        break;
-                    }
-                    else if (!tiles.Collision())
-                    {
-                        Sprite.position.Y += 5;
-                        //isFalling = false;
-                        Sprite.position.X += state.ThumbSticks.Left.X * speed;
-                    }
-                    break;
+                    _current = PlayerState.STILL;
+
+                    Sprite.position.Y += 5;
+                    //isFalling = false;
+                    Sprite.position.X += state.ThumbSticks.Left.X * speed;
+
+                break;
 
                 case PlayerState.STILL:
-                    if (!tiles.Collision())
+                    if (sndWalkIns.State == SoundState.Playing)
                     {
-                        if (sndWalkIns.State == SoundState.Playing)
-                        {
-                            sndWalkIns.Stop();
-                        }
-                        if (state.ThumbSticks.Left.X != 0)
-                        {
-                            _current = PlayerState.WALK;
-                        }
-                        if (InputManager.IsButtonPressed(Buttons.A))
-                        {
-                            _current = PlayerState.JUMP;
-                        }
+                        sndWalkIns.Stop();
                     }
-                    else if(tiles.Collision())
+                    if (state.ThumbSticks.Left.X != 0)
                     {
-                        _current = PlayerState.FALL;
+                        _current = PlayerState.WALK;
                     }
+                    if (InputManager.IsButtonPressed(Buttons.A))
+                    {
+                        _current = PlayerState.JUMP;
+                    }
+                    _current = PlayerState.FALL;
                     break;
 
                 case PlayerState.WALK:
 
-                    if (tiles.Collision())
+                    Sprite.position.X += state.ThumbSticks.Left.X * speed;
+
+                    if (sndWalkIns.State != SoundState.Playing)
                     {
-                        //Sprite.position.Y -= 1;
-                        _current = PlayerState.STILL;
-                        break;
+                        sndWalkIns.Play();
+                        //sndWalkIns.IsLooped = true;
                     }
-                    else if (!tiles.Collision())
+
+                    if (state.ThumbSticks.Left.X == 0)
                     {
-                        Sprite.position.X += state.ThumbSticks.Left.X * speed;
-
-                        if (sndWalkIns.State != SoundState.Playing)
-                        {
-                            sndWalkIns.Play();
-                            //sndWalkIns.IsLooped = true;
-                        }
-
-                        if (state.ThumbSticks.Left.X == 0)
-                        {
-                            _current = PlayerState.STILL;
-                        }
-                        if (state.ThumbSticks.Left.X > 0)
-                        {
-                            tiles.effect = SpriteEffects.FlipHorizontally;
-                        }
-                        else tiles.effect = SpriteEffects.None;
-                        if (InputManager.IsButtonPressed(Buttons.A) && !isJumping && !isFalling)
-                        {
-                            _current = PlayerState.JUMP;
-                        }
+                        _current = PlayerState.STILL;
+                    }
+                    if (state.ThumbSticks.Left.X > 0)
+                    {
+                        tiles.effect = SpriteEffects.FlipHorizontally;
+                    }
+                    else tiles.effect = SpriteEffects.None;
+                    if (InputManager.IsButtonPressed(Buttons.A) && !isJumping && !isFalling)
+                    {
+                        _current = PlayerState.JUMP;
                     }
                     break;
 
                 case PlayerState.JUMP:
-                    if (!tiles.Collision())
-                    {
-                        if (!isJumping)
-                        {
-                            Sprite.position.Y -= 120;
-                            Sprite.position.X += state.ThumbSticks.Left.X * speed;
-                            isJumping = true;
-                            _current = PlayerState.FALL;
-                        }
 
-                        if (sndJumpIns.State != SoundState.Playing)
-                        {
-                            sndJumpIns.Play();
-                            sndJump.Play();
-                        }
-                        else if (InputManager.IsButtonPressed(Buttons.A))
-                        {
-                            sndJumpIns.Stop();
-                        }
-                    }
-                    else if (tiles.Collision())
+                    if (!isJumping)
                     {
-                        //Sprite.position.Y -= 1;
+                        Sprite.position.Y -= 120;
+                        Sprite.position.X += state.ThumbSticks.Left.X * speed;
+                        isJumping = true;
                         _current = PlayerState.FALL;
-                        break;
                     }
 
-                    break;
+                    if (sndJumpIns.State != SoundState.Playing)
+                    {
+                        sndJumpIns.Play();
+                        sndJump.Play();
+                    }
+                    else if (InputManager.IsButtonPressed(Buttons.A))
+                    {
+                        sndJumpIns.Stop();
+                    }
+
+                    //Sprite.position.Y -= 1;
+                    _current = PlayerState.FALL;
+
+                break;
             }
 
             #region Uneeded?
@@ -268,16 +249,16 @@ namespace GameAttempt.Components
             switch(_current)
             {
                 case PlayerState.STILL:
-                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.sourceRectangle, Color.White, 0f, Vector2.Zero, s, 0f);
+                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.sourceRectangle, Color.White, 0f, Vector2.Zero, tiles.effect, 0f);
                     break;
                 case PlayerState.JUMP:
-                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.sourceRectangle, Color.White, 0f, Vector2.Zero, s, 0f);
+                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.sourceRectangle, Color.White, 0f, Vector2.Zero, tiles.effect, 0f);
                     break;
                 case PlayerState.WALK:
-                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.sourceRectangle, Color.White, 0f, Vector2.Zero, s, 0f);
+                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.sourceRectangle, Color.White, 0f, Vector2.Zero, tiles.effect, 0f);
                     break;
                 case PlayerState.FALL:
-                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.sourceRectangle, Color.White, 0f, Vector2.Zero, s, 0f);
+                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.sourceRectangle, Color.White, 0f, Vector2.Zero, tiles.effect, 0f);
                     break;
             }
             spriteBatch.End();
