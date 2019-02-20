@@ -41,6 +41,7 @@ namespace GameAttempt.Components
             GamePad.GetState(index);
             game.Components.Add(this);
             tiles = new TRender(game);
+            DrawOrder = 1;
         }
 
         public override void Initialize()
@@ -74,30 +75,30 @@ namespace GameAttempt.Components
             {
                 default:
                     Sprite = new AnimatedSprite(Game,
-                        Game.Content.Load<Texture2D>("Sprites/SpikeSprSheet"), Position, 11, Bounds);
+                        Game.Content.Load<Texture2D>("Sprites/TileSheet3"), Position, 15, 11, Bounds);
                     break;
 
                 case PlayerIndex.One:
                     Sprite = new AnimatedSprite(Game, 
-                        Game.Content.Load<Texture2D>("Sprites/SpikeSprSheet"), Position, 11, Bounds);
+                        Game.Content.Load<Texture2D>("Sprites/TileSheet3"), Position, 15, 11, Bounds);
                     ID = 1;
                     break;
 
                 case PlayerIndex.Two:
                     Sprite = new AnimatedSprite(Game,
-                        Game.Content.Load<Texture2D>("Sprites/SprSheet"), Position, 11, Bounds);
+                        Game.Content.Load<Texture2D>("Sprites/TileSheet3"), Position, 15, 11, Bounds);
                     ID = 2;
                     break;
 
                 case PlayerIndex.Three:
                     Sprite = new AnimatedSprite(Game,
-                        Game.Content.Load<Texture2D>("Sprites/SprSheet"), Position, 11, Bounds);
+                        Game.Content.Load<Texture2D>("Sprites/TileSheet3"), Position, 15, 11, Bounds);
                     ID = 3;
                     break;
 
                 case PlayerIndex.Four:
                     Sprite = new AnimatedSprite(Game,
-                        Game.Content.Load<Texture2D>("Sprites/SprSheet"), Position, 11, Bounds);
+                        Game.Content.Load<Texture2D>("Sprites/TileSheet3"), Position, 15, 11, Bounds);
                     ID = 4;
                     break;
             }
@@ -268,16 +269,16 @@ namespace GameAttempt.Components
             switch(_current)
             {
                 case PlayerState.STILL:
-                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.sourceRectangle, Color.White, 0f, Vector2.Zero, tiles.effect, 0f);
+                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.StillSource, Color.White, 0f, Vector2.Zero, tiles.effect, 0f);
                     break;
                 case PlayerState.JUMP:
-                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.sourceRectangle, Color.White, 0f, Vector2.Zero, tiles.effect, 0f);
+                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.FallSource, Color.White, 0f, Vector2.Zero, tiles.effect, 0f);
                     break;
                 case PlayerState.WALK:
-                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.sourceRectangle, Color.White, 0f, Vector2.Zero, tiles.effect, 0f);
+                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.WalkSource, Color.White, 0f, Vector2.Zero, tiles.effect, 0f);
                     break;
                 case PlayerState.FALL:
-                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.sourceRectangle, Color.White, 0f, Vector2.Zero, tiles.effect, 0f);
+                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.FallSource, Color.White, 0f, Vector2.Zero, tiles.effect, 0f);
                     break;
             }
             spriteBatch.End();

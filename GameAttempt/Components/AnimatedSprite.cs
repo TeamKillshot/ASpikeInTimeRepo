@@ -25,9 +25,7 @@ namespace Components
         //the current fram in the animation
         //the time between frames
         int numberOfFrames = 0;
-        int currentFrame = 0;
-        int mililsecondsBetweenFrames = 100;
-        float timer = 0f;
+       
 
         //the width and height of our texture
         protected int spriteWidth = 0;
@@ -44,68 +42,54 @@ namespace Components
             get { return spriteHeight; }
             set { spriteHeight = value; }
         }
-
-        //the source of our image within the sprite sheet to draw
-        public Rectangle sourceRectangle;
         public SpriteEffects _effect;
-
+        //the source of our image within the sprite sheet to draw
+        public Rectangle WalkSource; // For Walk Anim
+        public Rectangle FallSource; // For Jumping and Falling
+        public Rectangle StillSource; // For idle
+        
         public Rectangle BoundingRect;
 
         // Variable added to only all sound to play on initial collision
         // maintains the state of collision of the sprite over the course of updates
         // Set in collision detection function
-
+        public List<Rectangle> WalkAnim = new List<Rectangle>();
+        public List<Rectangle> AnimList = new List<Rectangle>();
         public bool InCollision = false;
 
-        public AnimatedSprite(Game game, Texture2D texture, Vector2 userPosition, int framecount, Rectangle bounds) : base(game)
+        public AnimatedSprite(Game game, Texture2D texture, Vector2 userPosition, int tsRows, int framecount, Rectangle bounds) : base(game)
         {
             game.Components.Add(this);
             spriteImage = texture;
             position = userPosition;
             numberOfFrames = framecount;
-            spriteHeight = spriteImage.Height;
+            spriteHeight = spriteImage.Height / tsRows;
             spriteWidth = spriteImage.Width / framecount;
             _effect = SpriteEffects.None;
             BoundingRect = bounds;
-            sourceRectangle = bounds;
+            for (int i = 0; i <= 10; i++)
+                AnimList.Add(new Rectangle(i * spriteWidth, 8 * spriteHeight, spriteWidth, spriteHeight));
+            
+            foreach (Rectangle rect in AnimList)
+            {
+                if (rect.X > 4 * spriteWidth)
+                    WalkAnim.Add(rect);
+            }
 
         }
 
 
         public override void Update(GameTime gametime)
         {
-            timer += (float)gametime.ElapsedGameTime.Milliseconds / (float)1.5;
+            
 
-            //if the timer is greater then the time between frames, then animate
-            if (timer > mililsecondsBetweenFrames)
-            {
-                //moce to the next frame
-                currentFrame++;
-
-                //if we have exceed the number of frames
-                if (currentFrame > numberOfFrames - 1)
-                {
-                    currentFrame = 0;
-                }
-                //reset our timer
-                timer = 0f;
-            }
-
-            //set the source to be the current frame in our animation
-            sourceRectangle = new Rectangle(currentFrame * spriteWidth, 0, spriteWidth, spriteHeight);
+            StillSource = AnimList.Find(a => a.X == 0);
+            FallSource = AnimList.Find(a => a.X == 2 * spriteWidth);
+            
             BoundingRect = new Rectangle((int)this.position.X, (int)this.position.Y, this.spriteWidth, this.spriteHeight);
 
         }
 
-        public override void Draw(GameTime gametime)
-        {
-            SpriteBatch spriteBatch = Game.Services.GetService<SpriteBatch>();
-            //draw the sprite , specify the postion and source for the image withtin the sprite sheet
-            spriteBatch.Begin();
-            // Changed to allow for sprite effect
-            // spriteBatch.Draw(spriteImage, position, sourceRectangle, Color.White, 0f, Vector2.Zero, 1.0f, _effect, 0f);
-            spriteBatch.End();
-        }
-
+       
     }
 }
