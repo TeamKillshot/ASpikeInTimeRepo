@@ -112,17 +112,23 @@ namespace GameAttempt.Components
             camera.FollowCharacter(Sprite.position, GraphicsDevice.Viewport);
             Bounds = new Rectangle((int)Sprite.position.X, (int)Sprite.position.Y, 128, 128);
             GamePadState state = GamePad.GetState(index);
-            previousPosition = Sprite.position - new Vector2(0,0.1f);
 
+            previousPosition = Sprite.position - new Vector2(0,3f);
+            //all tiles that are in collision with player bounds
             var collisionSet = tiles.collisons.Where(c => c.collider.Intersects(Bounds)).ToList();
 
             for (int i = 0; i < collisionSet.Count - 1; i++)
             {
+                //change color of collider rectangle to red
                 collisionSet[i].collisionColor = Color.Red;
 
-                if(collisionSet[i].collider.Top <= Bounds.Bottom)
+                //distance between tiles collider top and player bounds bottom
+                float distance = Bounds.Bottom - collisionSet[i].collider.Top;
+
+                if (distance > 0)
                 {
-                    Sprite.position = previousPosition;
+                    //move player back up
+                    Sprite.position.Y = previousPosition.Y;
                     _current = PlayerState.STILL;
                     break;
                 }
@@ -131,9 +137,22 @@ namespace GameAttempt.Components
                     _current = PlayerState.FALL;
                 }
 
+                if (collisionSet[i].collider.Top <= Bounds.Bottom)
+                {
+                    Sprite.position = previousPosition;
+                    _current = PlayerState.STILL;
+                    break;
+                }
+                else
+                {
+                    collisionSet[i].collisionColor = Color.White;
+
+                    _current = PlayerState.FALL;
+                }
+
                 if (collisionSet[i].collider.Right <= Bounds.Left || collisionSet[i].collider.Left >= Bounds.Right)
                 {
-                    Position.X = previousPosition.X;
+                    Sprite.position.X = previousPosition.X;
                     _current = PlayerState.STILL;
                 }
                 break;
@@ -146,15 +165,13 @@ namespace GameAttempt.Components
             {
                 case PlayerState.FALL:
 
-                    _current = PlayerState.STILL;
-
                     Sprite.position.Y += 5;
-                    //isFalling = false;
                     Sprite.position.X += state.ThumbSticks.Left.X * speed;
 
                 break;
 
                 case PlayerState.STILL:
+
                     if (sndWalkIns.State == SoundState.Playing)
                     {
                         sndWalkIns.Stop();
@@ -167,12 +184,14 @@ namespace GameAttempt.Components
                     {
                         _current = PlayerState.JUMP;
                     }
-                    _current = PlayerState.FALL;
+                    //_current = PlayerState.FALL;
                     break;
 
                 case PlayerState.WALK:
 
                     Sprite.position.X += state.ThumbSticks.Left.X * speed;
+
+                    //if(collisionSet)
 
                     if (sndWalkIns.State != SoundState.Playing)
                     {
@@ -216,7 +235,7 @@ namespace GameAttempt.Components
                     }
 
                     //Sprite.position.Y -= 1;
-                    _current = PlayerState.FALL;
+                    //_current = PlayerState.FALL;
 
                 break;
             }
