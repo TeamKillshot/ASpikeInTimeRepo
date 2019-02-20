@@ -15,7 +15,6 @@ namespace GameAttempt
 		Vector2 worldBound;
 		Viewport view;
 		float scale = 1f;
-		
 		public float Scale
 		{
 			get  { return scale; }
