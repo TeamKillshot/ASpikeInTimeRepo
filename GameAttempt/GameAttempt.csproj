@@ -77,6 +77,7 @@
     <Content Include="Content\Sprites\Spike.png" />
     <Content Include="Content\Sprites\SpikeSprSheet.png" />
     <Content Include="Content\Sprites\SprSheet.png" />
+    <Content Include="Content\Sprites\TileSheet3.png" />
     <Content Include="Content\Sprites\TileSheetOne.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>

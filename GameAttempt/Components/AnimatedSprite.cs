@@ -6,6 +6,7 @@ using GameAttempt.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using TileEngine;
 
 namespace Components
 {
@@ -31,14 +32,14 @@ namespace Components
 
         //the width and height of our texture
         protected int spriteWidth = 0;
-
         public int SpriteWidth
         {
             get { return spriteWidth; }
             set { spriteWidth = value; }
         }
-        int spriteHeight = 0;
 
+
+        protected int spriteHeight = 0;
         public int SpriteHeight
         {
             get { return spriteHeight; }
@@ -46,54 +47,58 @@ namespace Components
         }
 
         //the source of our image within the sprite sheet to draw
-        public Rectangle sourceRectangle;
-        public SpriteEffects _effect;
-
+       
+        public Rectangle WalkSource;
+        public Rectangle JumpSource;
+        public Rectangle StillSource;
+        public Rectangle FallSource;
         public Rectangle BoundingRect;
 
+        public SpriteEffects _effect;
+        public List<Rectangle> animList = new List<Rectangle>();
+        public List<Rectangle> WalkAnim = new List<Rectangle>();
+       
         // Variable added to only all sound to play on initial collision
         // maintains the state of collision of the sprite over the course of updates
         // Set in collision detection function
-
         public bool InCollision = false;
-
-        public AnimatedSprite(Game game, Texture2D texture, Vector2 userPosition, int framecount, Rectangle bounds) : base(game)
+        public AnimatedSprite(Game game, Texture2D texture, Vector2 userPosition, int tsHeight, int framecount, Rectangle bounds) : base(game)
         {
             game.Components.Add(this);
             spriteImage = texture;
             position = userPosition;
             numberOfFrames = framecount;
-            spriteHeight = spriteImage.Height / 3;
+            spriteHeight = spriteImage.Height / tsHeight;
             spriteWidth = spriteImage.Width / framecount;
-            _effect = SpriteEffects.None;
-            BoundingRect = bounds;
 
         }
 
 
         public override void Update(GameTime gametime)
         {
-            timer += (float)gametime.ElapsedGameTime.Milliseconds / (float)1.5;
+            for (int x = 0; x <= 11; x++)
+                if (animList.Count() <= 12)
+                    animList.Add(new Rectangle(x * spriteWidth, 8 * spriteHeight, spriteWidth, spriteHeight));
 
-            //if the timer is greater then the time between frames, then animate
-            if (timer > mililsecondsBetweenFrames)
+            int y = 0;
+            //set the source to be the current frame in our animation
+            foreach (Rectangle rect in animList)
             {
-                //moce to the next frame
-                currentFrame++;
-
-                //if we have exceed the number of frames
-                if (currentFrame > numberOfFrames - 1)
-                {
-                    currentFrame = 0;
-                }
-                //reset our timer
-                timer = 0f;
+                if (y > 4)
+                    WalkAnim.Add(rect);     // Splits Walk Anim from full tile sheet;               
+                if(y == 0)
+                    StillSource = rect;
+                if(y == 2)
+                    FallSource = rect;
+                y++;
             }
 
-            //set the source to be the current frame in our animation
-            sourceRectangle = new Rectangle(currentFrame * spriteWidth, 0, spriteWidth, spriteHeight);
-            BoundingRect = new Rectangle((int)this.position.X, (int)this.position.Y, this.spriteWidth, this.spriteHeight);
+            
+            
 
+
+            BoundingRect = new Rectangle((int)this.position.X, (int)this.position.Y, this.spriteWidth, this.spriteHeight);
+      
         }
         public bool collisionDetect(AnimatedSprite otherSprite)
         {
@@ -110,29 +115,6 @@ namespace Components
                 return false;
             }
         }
-        // Added code for movement and to spot horizontal effect
-        // Note assumes right facing sprite to begin
-
-        public void Move(Vector2 delta)
-        {
-            position += delta;
-            // update the new position of the Bounding Rect for an Animated sprite
-            BoundingRect = new Rectangle((int)this.position.X, (int)this.position.Y, this.spriteWidth, this.spriteHeight);
-            if (delta.X < 0)
-                _effect = SpriteEffects.FlipHorizontally;
-            else _effect = SpriteEffects.None;
-
-        }
-
-        public override void Draw(GameTime gametime)
-        {
-            SpriteBatch spriteBatch = Game.Services.GetService<SpriteBatch>();
-            //draw the sprite , specify the postion and source for the image withtin the sprite sheet
-            spriteBatch.Begin();
-            // Changed to allow for sprite effect
-            // spriteBatch.Draw(spriteImage, position, sourceRectangle, Color.White, 0f, Vector2.Zero, 1.0f, _effect, 0f);
-            spriteBatch.End();
-        }
-
+       
     }
 }

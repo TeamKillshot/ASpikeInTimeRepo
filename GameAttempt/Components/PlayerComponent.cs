@@ -11,7 +11,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace GameAttempt.Components
-{
+{   
+
     public class PlayerComponent : DrawableGameComponent
     {
         //Properties
@@ -73,30 +74,30 @@ namespace GameAttempt.Components
             {
                 default:
                     Sprite = new AnimatedSprite(Game,
-                        Game.Content.Load<Texture2D>("Sprites/CharacterSpriteSheet"), Position, 11, Bounds);
+                        Game.Content.Load<Texture2D>("Sprites/CharacterSpriteSheet"), Position, 15, 11, Bounds);
                     break;
 
                 case PlayerIndex.One:
                     Sprite = new AnimatedSprite(Game, 
-                        Game.Content.Load<Texture2D>("Sprites/SprSheet"), Position, 11, Bounds);
+                        Game.Content.Load<Texture2D>("Sprites/TileSheet3"), Position, 15, 11, Bounds);
                     ID = 1;
                     break;
 
                 case PlayerIndex.Two:
                     Sprite = new AnimatedSprite(Game,
-                        Game.Content.Load<Texture2D>("Sprites/SprSheet"), Position, 11, Bounds);
+                        Game.Content.Load<Texture2D>("Sprites/TileSheet3"), Position, 15, 11, Bounds);
                     ID = 2;
                     break;
 
                 case PlayerIndex.Three:
                     Sprite = new AnimatedSprite(Game,
-                        Game.Content.Load<Texture2D>("Sprites/SprSheet"), Position, 11, Bounds);
+                        Game.Content.Load<Texture2D>("Sprites/TileSheet3"), Position, 15, 11, Bounds);
                     ID = 3;
                     break;
 
                 case PlayerIndex.Four:
                     Sprite = new AnimatedSprite(Game,
-                        Game.Content.Load<Texture2D>("Sprites/SprSheet"), Position, 11, Bounds);
+                        Game.Content.Load<Texture2D>("Sprites/TileSheet3"), Position, 15, 11, Bounds);
                     ID = 4;
                     break;
             }
@@ -159,7 +160,7 @@ namespace GameAttempt.Components
                     }
                     if (state.ThumbSticks.Left.X != 0)
                     {
-                        _current = PlayerState.WALK;
+                        _current = PlayerState.WALK;                       
                     }
                     if(InputManager.IsButtonPressed(Buttons.A))
                     {
@@ -171,25 +172,30 @@ namespace GameAttempt.Components
                     Sprite.position.X += state.ThumbSticks.Left.X * speed;
                     if(sndWalkIns.State != SoundState.Playing)
                     {
-                        sndWalkIns.Play();
-                        //sndWalkIns.IsLooped = true;
+                        sndWalkIns.Play();                        
                     }
                     if (state.ThumbSticks.Left.X == 0)
                     {
                         _current = PlayerState.STILL;
                     }
+
                     if (state.ThumbSticks.Left.X > 0)
                     {
                         s = SpriteEffects.FlipHorizontally;
                     }
-                    else s = SpriteEffects.None;
+                    if (state.ThumbSticks.Left.X < 0)
+                    {
+                        s = SpriteEffects.None;
+                    }
+
                     if (InputManager.IsButtonPressed(Buttons.A) && !isJumping && !isFalling)
                     {
                         _current = PlayerState.JUMP;
                     }
-                    //if(!isColliding)
+                    //if (!isColliding)
                     //{
-                    //    _current = PlayerState.FALL;
+                    //   _current = PlayerState.FALL;
+                       
                     //}
                     else if (isColliding)
                     {
@@ -215,23 +221,7 @@ namespace GameAttempt.Components
                         _current = PlayerState.FALL;
                     }
                     break;
-            }
-
-            #region Uneeded?
-            //if (InputManager.IsKeyPressed(Keys.A))
-            //{
-            //    s = SpriteEffects.None;
-            //    Position -= new Vector2(9, 0);
-            //    _current = PlayerState.WALK;
-            //}
-            //if (InputManager.IsKeyPressed(Keys.D))
-            //{
-            //    s = SpriteEffects.FlipHorizontally;
-            //    Position += new Vector2(9, 0);
-            //    _current = PlayerState.WALK;
-            //}
-
-            #endregion
+            }           
 
             base.Update(gameTime);
         }
@@ -242,19 +232,20 @@ namespace GameAttempt.Components
             Camera Cam = Game.Services.GetService<Camera>();
 
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Cam.CurrentCamTranslation);
-            switch(_current)
+            
+            switch (_current)
             {
                 case PlayerState.STILL:
-                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.sourceRectangle, Color.White, 0f, Vector2.Zero, s, 0f);
+                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.StillSource, Color.White, 0f, Vector2.Zero, s, 0f);
                     break;
                 case PlayerState.JUMP:
-                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.sourceRectangle, Color.White, 0f, Vector2.Zero, s, 0f);
+                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.FallSource, Color.White, 0f, Vector2.Zero, s, 0f);
                     break;
                 case PlayerState.WALK:
-                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.sourceRectangle, Color.White, 0f, Vector2.Zero, s, 0f);
+                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.WalkSource, Color.White, 0f, Vector2.Zero, s, 0f);
                     break;
                 case PlayerState.FALL:
-                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.sourceRectangle, Color.White, 0f, Vector2.Zero, s, 0f);
+                    spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.FallSource, Color.White, 0f, Vector2.Zero, s, 0f);
                     break;
             }
             spriteBatch.End();
