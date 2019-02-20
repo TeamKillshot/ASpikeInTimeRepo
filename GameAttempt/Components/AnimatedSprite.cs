@@ -96,34 +96,6 @@ namespace Components
             BoundingRect = new Rectangle((int)this.position.X, (int)this.position.Y, this.spriteWidth, this.spriteHeight);
 
         }
-        public bool collisionDetect(AnimatedSprite otherSprite)
-        {
-            BoundingRect = new Rectangle((int)this.position.X, (int)this.position.Y, this.spriteWidth, this.spriteHeight);
-            Rectangle otherBound = new Rectangle((int)otherSprite.position.X, (int)otherSprite.position.Y, otherSprite.spriteWidth, this.spriteHeight);
-            if (BoundingRect.Intersects(otherBound))
-            {
-                InCollision = true;
-                return true;
-            }
-            else
-            {
-                InCollision = false;
-                return false;
-            }
-        }
-        // Added code for movement and to spot horizontal effect
-        // Note assumes right facing sprite to begin
-
-        public void Move(Vector2 delta)
-        {
-            position += delta;
-            // update the new position of the Bounding Rect for an Animated sprite
-            BoundingRect = new Rectangle((int)this.position.X, (int)this.position.Y, this.spriteWidth, this.spriteHeight);
-            if (delta.X < 0)
-                _effect = SpriteEffects.FlipHorizontally;
-            else _effect = SpriteEffects.None;
-
-        }
 
         public override void Draw(GameTime gametime)
         {

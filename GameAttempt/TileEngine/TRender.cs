@@ -1,4 +1,5 @@
 ﻿
+using GameAttempt.Components;
 using Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -19,6 +20,8 @@ namespace GameAttempt
 		TManager tileManager;
 		Texture2D tSheet;
         ServiceManager serviceManager;
+        PlayerComponent Player;
+        public SpriteEffects effect;
 		//Camera camera;
 
 		Vector2 ViewportCentre
@@ -109,6 +112,7 @@ namespace GameAttempt
 		public override void Initialize()
 		{
             //serviceManager = new ServiceManager(Game);
+            //Player = new PlayerComponent(Game);
             base.Initialize();
 		}
 
@@ -123,7 +127,35 @@ namespace GameAttempt
 
 		}
 
-		public override void Update(GameTime gameTime)
+        public bool BottomCollision()
+        {
+            Player = Game.Services.GetService<PlayerComponent>();
+
+            foreach (Collider c in collisons)
+            {
+                if (Player.Bounds.Bottom > c.collider.Top)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool SideCollision()
+        {
+            Player = Game.Services.GetService<PlayerComponent>();
+
+            foreach (Collider c in collisons)
+            {
+                if (Player.Bounds.Left >= c.collider.Right || Player.Bounds.Right <= c.collider.Left)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public override void Update(GameTime gameTime)
 		{
 			base.Update(gameTime);
 		}

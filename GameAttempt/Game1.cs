@@ -15,8 +15,6 @@ namespace GameAttempt
         GraphicsDeviceManager graphics;
         //SpriteBatch spriteBatch;
 
-        TRender tiles;
-        PlayerComponent player;
         ServiceManager serviceManager;
         Song bkgrnd;
 
