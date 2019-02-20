@@ -63,10 +63,11 @@ namespace Components
             spriteImage = texture;
             position = userPosition;
             numberOfFrames = framecount;
-            spriteHeight = spriteImage.Height / 3;
+            spriteHeight = spriteImage.Height;
             spriteWidth = spriteImage.Width / framecount;
             _effect = SpriteEffects.None;
             BoundingRect = bounds;
+            sourceRectangle = bounds;
 
         }
 
