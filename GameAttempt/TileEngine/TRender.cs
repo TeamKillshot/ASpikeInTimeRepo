@@ -127,13 +127,27 @@ namespace GameAttempt
 
 		}
 
-        public bool Collision()
+        public bool BottomCollision()
         {
             Player = Game.Services.GetService<PlayerComponent>();
 
             foreach (Collider c in collisons)
             {
-                if (Player.Bounds.Intersects(c.collider))
+                if (Player.Bounds.Bottom > c.collider.Top)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool SideCollision()
+        {
+            Player = Game.Services.GetService<PlayerComponent>();
+
+            foreach (Collider c in collisons)
+            {
+                if (Player.Bounds.Left >= c.collider.Right || Player.Bounds.Right <= c.collider.Left)
                 {
                     return true;
                 }
