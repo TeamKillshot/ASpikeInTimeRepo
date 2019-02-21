@@ -48,6 +48,7 @@ namespace GameAttempt
             if (bkgrnd != null)
             {
                 MediaPlayer.Play(bkgrnd);
+                MediaPlayer.Volume = .5f;
                 MediaPlayer.IsRepeating = true;
             }
 

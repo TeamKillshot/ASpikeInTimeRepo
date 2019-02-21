@@ -19,6 +19,7 @@ namespace GameAttempt
 		#region Properties
 		TManager tileManager;
 		Texture2D tSheet;
+        Texture2D bgText;
         ServiceManager serviceManager;
         PlayerComponent Player;
         public SpriteEffects effect;
@@ -39,8 +40,8 @@ namespace GameAttempt
 		public int tsWidth;						// gets the width of tSheet
 		public int tsHeight;                       // gets teh height of tSheet
 	
-		public int tsRows = 11;					// how many sprites in a column
-		public int tsColumns = 8;                  // how many Sprites in a Row
+		public int tsRows = 15;					// how many sprites in a column
+		public int tsColumns = 11;                  // how many Sprites in a Row
 		
 		public int scale = 2;
 
@@ -76,10 +77,10 @@ namespace GameAttempt
 			
 			tileManager = new TManager();
 			tSheet = Game.Content.Load<Texture2D>
-										  ("Sprites/TileSheetOne");    // get TileSheet
-
+										  ("Sprites/TileSheet3");    // get TileSheet
+            bgText = Game.Content.Load<Texture2D>("Sprites/BackgroundWater");
 			// create a new tile from the TileSheet in list (locX, locY, IndexNum)
-			tRefs.Add(new TRef(0, 9, 0));   // blank space
+			tRefs.Add(new TRef(0, 15, 0));   // blank space
 			tRefs.Add(new TRef(0, 0, 1));   // Ground with grass
 			tRefs.Add(new TRef(0, 1, 2));   // Ground 
 
@@ -166,6 +167,7 @@ namespace GameAttempt
             Camera Cam = Game.Services.GetService<Camera>();
 
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Cam.CurrentCamTranslation);
+            spriteBatch.Draw(bgText, new Rectangle(Cam.View.X, Cam.View.Y, tsWidth * tileMap.GetLength(0), 24 * tileMap.GetLength(1)), Color.White);
 
 			foreach (Tile t in tileManager.ActiveLayer.Tiles)
 			{
