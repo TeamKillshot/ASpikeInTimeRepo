@@ -14,8 +14,7 @@ namespace TileEngine
 		public int tVal;
 
 		public TRef( int x, int y, int val)
-		{
-            
+		{            
 			TLocX = x;
 			TLocY = y;
 			tVal = val;

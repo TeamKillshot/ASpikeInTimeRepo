@@ -85,7 +85,12 @@ namespace Components
 
             StillSource = AnimList.Find(a => a.X == 0);
             FallSource = AnimList.Find(a => a.X == 2 * spriteWidth);
-            
+
+            foreach (Rectangle rect in WalkAnim)
+            {
+                WalkSource = rect;
+            }
+
             BoundingRect = new Rectangle((int)this.position.X, (int)this.position.Y, this.spriteWidth, this.spriteHeight);
 
         }
