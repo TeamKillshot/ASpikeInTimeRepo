@@ -17,25 +17,27 @@ namespace GameAttempt.Components
         //Properties
         AnimatedSprite Sprite { get; set; }
         public int ID { get; set; }
-        //ServiceManager serviceManager;
 
-        //variables
+        //variables for collision handling
         Rectangle collisionRect;
         float distance;
         float playerRightSideDistance;
         float playerLeftSideDistance;
+
+        //variables for player position and drawing
+        public Vector2 previousPosition;
+        public Vector2 Position;
+        public Rectangle Bounds;
+
+        //Sounds
+        SoundEffect sndJump, sndWalk, sndWalk2;
+        SoundEffectInstance sndJumpIns, sndWalkIns, sndWalkIns2;
+
+        //other variables
         SpriteFont font;
         int speed;
         TRender tiles;
         PlayerIndex index;
-        Texture2D PlayerRect;
-        public Vector2 previousPosition;
-        public Vector2 Position;
-        public Rectangle Bounds;
-        //Camera camera;
-
-        SoundEffect sndJump, sndWalk, sndWalk2;
-        SoundEffectInstance sndJumpIns, sndWalkIns, sndWalkIns2;
 
         //PlayerStates
         public enum PlayerState { STILL, WALK, JUMP, FALL }
@@ -63,6 +65,8 @@ namespace GameAttempt.Components
 
         protected override void LoadContent()
         {
+            #region Load In Audio and Font
+
             //Audio Load
             sndJump = Game.Content.Load<SoundEffect>("Audio/jump_snd");
             sndJumpIns = sndJump.CreateInstance();
@@ -77,6 +81,10 @@ namespace GameAttempt.Components
             sndWalkIns2.Volume = 1.0f;
 
             font = Game.Content.Load<SpriteFont>("font");
+
+            #endregion
+
+            #region Load In Sprites and set Index
 
             switch (index)
             {
@@ -110,7 +118,7 @@ namespace GameAttempt.Components
                     break;
             }
 
-            PlayerRect = Game.Content.Load<Texture2D>("Sprites/Collison");
+            #endregion
         }
 
         public override void Update(GameTime gameTime)

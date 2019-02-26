@@ -67,6 +67,7 @@ namespace Components
             spriteWidth = spriteImage.Width / framecount;
             _effect = SpriteEffects.None;
             BoundingRect = bounds;
+
             for (int i = 0; i <= 10; i++)
                 AnimList.Add(new Rectangle(i * spriteWidth, 8 * spriteHeight, spriteWidth, spriteHeight));
             
@@ -81,8 +82,6 @@ namespace Components
 
         public override void Update(GameTime gametime)
         {
-            
-
             StillSource = AnimList.Find(a => a.X == 0);
             FallSource = AnimList.Find(a => a.X == 2 * spriteWidth);
 
