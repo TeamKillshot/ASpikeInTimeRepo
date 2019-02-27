@@ -25,7 +25,7 @@ namespace Managers
             if (MapDebug == 1)
             {
                 camera = new Camera(Vector2.Zero, 
-                         new Vector2(tiles.tileMap.GetLength(1) * tiles.tsWidth, 
+                         new Vector2(tiles.tileMap.GetLength(1) * tiles.tsWidth * 2, 
                          tiles.tileMap.GetLength(0)) * tiles.tsHeight,
                          tiles.GraphicsDevice.Viewport);
             }

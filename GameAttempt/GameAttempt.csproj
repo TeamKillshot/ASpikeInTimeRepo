@@ -72,7 +72,6 @@
     <Content Include="Content\Backgrounds\FalloutLevel3Final.png" />
     <Content Include="Content\Backgrounds\IceAgeLevel2Final.png" />
     <Content Include="Content\Backgrounds\MelvinsShipLevel4Final.png" />
-    <Content Include="Content\Sprites\BackgroundWater.png" />
     <Content Include="Content\Sprites\Collison.png" />
     <Content Include="Content\Sprites\TileSheet3.png" />
     <Content Include="Icon.ico" />
