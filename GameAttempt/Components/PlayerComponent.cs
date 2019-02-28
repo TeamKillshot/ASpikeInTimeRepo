@@ -134,7 +134,7 @@ namespace GameAttempt.Components
                 camera.FollowCharacter(Sprite.position, GraphicsDevice.Viewport);
             }
 
-            Bounds = new Rectangle((int)Sprite.position.X + 40, (int)Sprite.position.Y + 15, Sprite.SpriteWidth - 80, Sprite.SpriteHeight - 20);
+            Bounds = new Rectangle((int)Sprite.position.X, (int)Sprite.position.Y, Sprite.SpriteWidth, Sprite.SpriteHeight);
             collisionRect = new Rectangle(Bounds.Location.X, Bounds.Location.Y, Bounds.Width, Bounds.Height + 5);
             GamePadState state = GamePad.GetState(index);
 
@@ -207,11 +207,11 @@ namespace GameAttempt.Components
                     for (int i = 0; i < collisionSet.Count - 1; i++)
                     {
                         //Check the distance between the two rectangles ahead of time
-                        playerRightSideDistance = Bounds.Right - collisionSet[i].collider.Left;
+                        playerRightSideDistance = Bounds.Left - collisionSet[i].collider.Left;
                         playerLeftSideDistance = Bounds.Left - collisionSet[i].collider.Right;
 
                         //colliding from left
-                        if (playerRightSideDistance >= 45 && playerLeftSideDistance <= 0)
+                        if (playerRightSideDistance >= 1 && playerLeftSideDistance <= 191)
                         {
                             //bounce the player backwards from the thing it's colliding with
                             Sprite.position.X = previousPosition.X + 25;
@@ -223,7 +223,7 @@ namespace GameAttempt.Components
                             }
                             break;
                         }
-                        else if(playerRightSideDistance <= 44 && playerRightSideDistance >= 0)
+                        else if(playerLeftSideDistance <= 0 && playerRightSideDistance >= 192)
                         {
                             Sprite.position.X = previousPosition.X - 25;
                             _current = PlayerState.STILL;
