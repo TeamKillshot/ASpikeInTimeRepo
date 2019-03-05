@@ -223,7 +223,7 @@ namespace GameAttempt.Components
                             }
                             break;
                         }
-                        else if (playerLeftSideDistance <= 0 && playerRightSideDistance >= 192)
+                        else if (playerLeftSideDistance <= 0 && playerRightSideDistance <= 0)
                         {
                             Sprite.position.X = previousPosition.X - 25;
                             _current = PlayerState.STILL;
@@ -296,7 +296,7 @@ namespace GameAttempt.Components
             Camera Cam = Game.Services.GetService<Camera>();
 
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Cam.CurrentCamTranslation);
-            spriteBatch.Draw(TempText, Bounds, Color.Black);
+            //spriteBatch.Draw(TempText, Bounds, Color.Black);
             switch (_current)
             {
                 case PlayerState.STILL:

@@ -78,7 +78,7 @@ namespace GameAttempt
 			tileManager = new TManager();
 			tSheet = Game.Content.Load<Texture2D>
 										  ("Sprites/TileSheet3");    // get TileSheet
-            bgText = Game.Content.Load<Texture2D>("Sprites/BackgroundWater");
+            bgText = Game.Content.Load<Texture2D>("Sprites/DinoParkBackgroundFinal");
 			// create a new tile from the TileSheet in list (locX, locY, IndexNum)
 			tRefs.Add(new TRef(0, 15, 0));   // blank space
 			tRefs.Add(new TRef(0, 0, 1));   // Ground with grass
