@@ -128,8 +128,14 @@ namespace GameAttempt.Components
 
         public override void Update(GameTime gameTime)
         {
+            bool hasCollided = false;
+
             Camera camera = Game.Services.GetService<Camera>();
             if (_current == PlayerState.WALK || _current == PlayerState.STILL || _current == PlayerState.FALL)
+            {
+                camera.FollowCharacter(Sprite.position, GraphicsDevice.Viewport);
+            }
+            else if(!hasCollided)
             {
                 camera.FollowCharacter(Sprite.position, GraphicsDevice.Viewport);
             }
@@ -213,18 +219,21 @@ namespace GameAttempt.Components
                         //colliding from left
                         if (playerRightSideDistance >= 1 && playerLeftSideDistance <= 191)
                         {
+                            hasCollided = true;
                             //bounce the player backwards from the thing it's colliding with
                             Sprite.position.X = previousPosition.X + 25;
                             _current = PlayerState.STILL;
                             //Check to see if the Player has soemthing to stand on
                             if (hasCollidedBottom == false)
                             {
+                                //need to change this so the fall state occurs but it doesnt change the draw
                                 _current = PlayerState.FALL;
                             }
                             break;
                         }
                         else if (playerLeftSideDistance <= 0 && playerRightSideDistance <= 0)
                         {
+                            hasCollided = true;
                             Sprite.position.X = previousPosition.X - 25;
                             _current = PlayerState.STILL;
                             //Check to see if the Player has something to stand on
