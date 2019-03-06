@@ -68,17 +68,18 @@
     <Content Include="Content\Audio\GreenGrave_mp3.mp3" />
     <Content Include="Content\Audio\jump_snd.wav" />
     <Content Include="Content\Audio\step_snd.wav" />
+    <Content Include="Content\Backgrounds\DinoParkBackgroundFinal.png" />
+    <Content Include="Content\Backgrounds\FalloutLevel3Final.png" />
+    <Content Include="Content\Backgrounds\IceAgeLevel2Final.png" />
+    <Content Include="Content\Backgrounds\MelvinsShipLevel4Final.png" />
     <Content Include="Content\Sprites\Collison.png" />
-    <Content Include="Content\Sprites\DinoParkBackgroundFinal.png" />
-    <Content Include="Content\Sprites\FalloutLevel3Final.png" />
-    <Content Include="Content\Sprites\IceAgeLevel2Final.png" />
-    <Content Include="Content\Sprites\MelvinsShipLevel4Final.png" />
     <Content Include="Content\Sprites\TileSheet3.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
     <None Include="app.manifest" />
+    <None Include="Content\font.spritefont" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

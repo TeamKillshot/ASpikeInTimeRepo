@@ -19,40 +19,24 @@ namespace Managers
 
         public ServiceManager(Game game) : base(game)
         {
+            int MapDebug = 1;
             spriteBatch = new SpriteBatch(game.GraphicsDevice);
             tiles = new TRender(game);
-
-            switch (tiles._current)
+            if (MapDebug == 1)
             {
-                case TRender.LevelStates.LevelOne:
-                    camera = new Camera(Vector2.Zero,
-                         new Vector2(tiles.tileMap.GetLength(1) * tiles.tsWidth,
+                camera = new Camera(Vector2.Zero, 
+                         new Vector2(tiles.tileMap.GetLength(1) * tiles.tsWidth * 2, 
                          tiles.tileMap.GetLength(0)) * tiles.tsHeight,
                          tiles.GraphicsDevice.Viewport);
-                    break;
-
-                case TRender.LevelStates.LevelTwo:
-                    camera = new Camera(Vector2.Zero,
-                         new Vector2(tiles.tileMap.GetLength(1) * tiles.tsWidth,
-                         tiles.tileMap.GetLength(0)) * tiles.tsHeight,
-                         tiles.GraphicsDevice.Viewport);
-                    break;
-
-                case TRender.LevelStates.LevelThree:
-                    camera = new Camera(Vector2.Zero,
-                         new Vector2(tiles.tileMap.GetLength(1) * tiles.tsWidth,
-                         tiles.tileMap.GetLength(0)) * tiles.tsHeight,
-                         tiles.GraphicsDevice.Viewport);
-                    break;
-
-                case TRender.LevelStates.LevelFour:
-                    camera = new Camera(Vector2.Zero,
-                         new Vector2(tiles.tileMap.GetLength(1) * tiles.tsWidth,
-                         tiles.tileMap.GetLength(0)) * tiles.tsHeight,
-                         tiles.GraphicsDevice.Viewport);
-                    break;
             }
-
+            else
+            {
+                camera = new Camera(Vector2.Zero,
+                    new Vector2(tiles.tileMap.GetLength(1) * tiles.tsWidth,
+                     tiles.tileMap.GetLength(0) * tiles.tsHeight),
+                        tiles.GraphicsDevice.Viewport);
+            }
+            
             player = new PlayerComponent(game);
 
             AddToServices();
@@ -60,7 +44,7 @@ namespace Managers
 
         public void AddToServices()
         {
-            Game.Services.AddService<Camera>(camera);
+            Game.Services.AddService<Camera>(camera);           
             Game.Services.AddService<SpriteBatch>(spriteBatch);
             Game.Services.AddService<PlayerComponent>(player);
             Game.Services.AddService<TRender>(tiles);

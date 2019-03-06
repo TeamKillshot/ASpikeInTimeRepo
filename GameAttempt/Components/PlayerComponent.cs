@@ -46,7 +46,7 @@ namespace GameAttempt.Components
         public enum PlayerState { STILL, WALK, JUMP, FALL }
         public PlayerState _current;
 
-        public PlayerComponent(Game game) : base(game)
+        public PlayerComponent(Game game): base(game)
         {
             GamePad.GetState(index);
             game.Components.Add(this);
@@ -99,7 +99,7 @@ namespace GameAttempt.Components
                     break;
 
                 case PlayerIndex.One:
-                    Sprite = new AnimatedSprite(Game,
+                    Sprite = new AnimatedSprite(Game, 
                         Game.Content.Load<Texture2D>("Sprites/TileSheet3"), Position, 15, 11, Bounds);
                     ID = 1;
                     break;
@@ -128,14 +128,8 @@ namespace GameAttempt.Components
 
         public override void Update(GameTime gameTime)
         {
-            bool hasCollided = false;
-
             Camera camera = Game.Services.GetService<Camera>();
-            if (_current == PlayerState.WALK || _current == PlayerState.STILL || _current == PlayerState.FALL)
-            {
-                camera.FollowCharacter(Sprite.position, GraphicsDevice.Viewport);
-            }
-            else if(!hasCollided)
+            if(_current == PlayerState.WALK || _current == PlayerState.STILL || _current == PlayerState.FALL)
             {
                 camera.FollowCharacter(Sprite.position, GraphicsDevice.Viewport);
             }
@@ -181,7 +175,7 @@ namespace GameAttempt.Components
                         else hasCollidedBottom = false;
                     }
 
-                    break;
+                break;
 
                 case PlayerState.STILL:
                     //stop the walk sound if it's playing
@@ -219,21 +213,18 @@ namespace GameAttempt.Components
                         //colliding from left
                         if (playerRightSideDistance >= 1 && playerLeftSideDistance <= 191)
                         {
-                            hasCollided = true;
                             //bounce the player backwards from the thing it's colliding with
                             Sprite.position.X = previousPosition.X + 25;
                             _current = PlayerState.STILL;
                             //Check to see if the Player has soemthing to stand on
                             if (hasCollidedBottom == false)
                             {
-                                //need to change this so the fall state occurs but it doesnt change the draw
                                 _current = PlayerState.FALL;
                             }
                             break;
                         }
-                        else if (playerLeftSideDistance <= 0 && playerRightSideDistance <= 0)
+                        else if(playerLeftSideDistance <= 0 && playerRightSideDistance >= 192)
                         {
-                            hasCollided = true;
                             Sprite.position.X = previousPosition.X - 25;
                             _current = PlayerState.STILL;
                             //Check to see if the Player has something to stand on
@@ -290,7 +281,7 @@ namespace GameAttempt.Components
                     //Sprite.position.Y -= 1;
                     //_current = PlayerState.FALL;
 
-                    break;
+                break;
             }
 
             playerLeftSideDistance += 0;
@@ -305,8 +296,8 @@ namespace GameAttempt.Components
             Camera Cam = Game.Services.GetService<Camera>();
 
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Cam.CurrentCamTranslation);
-            //spriteBatch.Draw(TempText, Bounds, Color.Black);
-            switch (_current)
+            spriteBatch.Draw(TempText, Bounds, Color.Black);
+            switch(_current)
             {
                 case PlayerState.STILL:
                     spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.StillSource, Color.White, 0f, Vector2.Zero, tiles.effect, 0f);
@@ -315,7 +306,7 @@ namespace GameAttempt.Components
                     spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.FallSource, Color.White, 0f, Vector2.Zero, tiles.effect, 0f);
                     break;
                 case PlayerState.WALK:
-
+                    
                     spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.WalkSource, Color.White, 0f, Vector2.Zero, tiles.effect, 0f);
                     break;
                 case PlayerState.FALL:
