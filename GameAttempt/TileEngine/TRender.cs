@@ -4,6 +4,7 @@ using Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,9 @@ namespace GameAttempt
         PlayerComponent Player;
         public SpriteEffects effect;
         //Camera camera;
+
+        //Audio
+        Song lvl1Song;
 
         //Level States
         public enum LevelStates { LevelOne, LevelTwo, LevelThree, LevelFour };
@@ -71,6 +75,8 @@ namespace GameAttempt
             tsHeight = tSheet.Height / tsRows;                  // gets Height of tiles
 
             _current = LevelStates.LevelOne;
+
+            #region TileMaps
 
             tileMap = new int[,]
                 {
@@ -156,6 +162,8 @@ namespace GameAttempt
                         {   8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  },
                 };
 
+            #endregion
+
             game.Components.Add(this);
 
             tileManager = new TManager();
@@ -169,6 +177,10 @@ namespace GameAttempt
 
         protected override void LoadContent()
         {
+            //Audio
+            lvl1Song = Game.Content.Load<Song>("Audio/GreenGrave_mp3");
+
+            //Level Content
             LevelOneBkGrnd = Game.Content.Load<Texture2D>("Sprites/DinoParkBackgroundFinal");
             LevelTwoBkGrnd = Game.Content.Load<Texture2D>("Sprites/IceAgeLevel2Final");
             LevelThreeBkGrnd = Game.Content.Load<Texture2D>("Sprites/FalloutLevel3Final");
@@ -243,6 +255,14 @@ namespace GameAttempt
             switch (_current)
             {
                 case LevelStates.LevelOne:
+
+                    if (lvl1Song != null)
+                    {
+                        MediaPlayer.Play(lvl1Song);
+                        MediaPlayer.Volume = .5f;
+                        MediaPlayer.IsRepeating = true;
+                    }
+
                     if (InputManager.IsButtonPressed(Buttons.RightTrigger))
                     {
                         _current = LevelStates.LevelTwo;
@@ -286,6 +306,7 @@ namespace GameAttempt
                     }
                     break;
             }
+
             base.Update(gameTime);
         }
 
