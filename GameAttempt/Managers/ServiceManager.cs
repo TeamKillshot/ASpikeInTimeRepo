@@ -30,6 +30,27 @@ namespace Managers
                          tiles.tileMap.GetLength(0)) * tiles.tsHeight,
                          tiles.GraphicsDevice.Viewport);
                     break;
+
+                case TRender.LevelStates.LevelTwo:
+                    camera = new Camera(Vector2.Zero,
+                         new Vector2(tiles.tileMap.GetLength(1) * tiles.tsWidth,
+                         tiles.tileMap.GetLength(0)) * tiles.tsHeight,
+                         tiles.GraphicsDevice.Viewport);
+                    break;
+
+                case TRender.LevelStates.LevelThree:
+                    camera = new Camera(Vector2.Zero,
+                         new Vector2(tiles.tileMap.GetLength(1) * tiles.tsWidth,
+                         tiles.tileMap.GetLength(0)) * tiles.tsHeight,
+                         tiles.GraphicsDevice.Viewport);
+                    break;
+
+                case TRender.LevelStates.LevelFour:
+                    camera = new Camera(Vector2.Zero,
+                         new Vector2(tiles.tileMap.GetLength(1) * tiles.tsWidth,
+                         tiles.tileMap.GetLength(0)) * tiles.tsHeight,
+                         tiles.GraphicsDevice.Viewport);
+                    break;
             }
 
             player = new PlayerComponent(game);
