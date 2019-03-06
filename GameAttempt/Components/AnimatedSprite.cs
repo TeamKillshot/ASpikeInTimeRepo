@@ -55,7 +55,7 @@ namespace Components
         // Set in collision detection function
         public List<Rectangle> WalkAnim = new List<Rectangle>();
         public List<Rectangle> AnimList = new List<Rectangle>();
-        public bool InCollision = false;
+        public bool InCollision = false;        
 
         public AnimatedSprite(Game game, Texture2D texture, Vector2 userPosition, int tsRows, int framecount, Rectangle bounds) : base(game)
         {
@@ -67,6 +67,7 @@ namespace Components
             spriteWidth = spriteImage.Width / framecount;
             _effect = SpriteEffects.None;
             BoundingRect = bounds;
+
             for (int i = 0; i <= 10; i++)
                 AnimList.Add(new Rectangle(i * spriteWidth, 8 * spriteHeight, spriteWidth, spriteHeight));
             
@@ -86,15 +87,14 @@ namespace Components
             StillSource = AnimList.Find(a => a.X == 0);
             FallSource = AnimList.Find(a => a.X == 2 * spriteWidth);
 
-            foreach (Rectangle rect in WalkAnim)
-            {
-                WalkSource = rect;
-            }
+            for (int i = 0; i <= WalkAnim.Count()-1; i++)
+                WalkSource = WalkAnim[i];
 
             BoundingRect = new Rectangle((int)this.position.X, (int)this.position.Y, this.spriteWidth, this.spriteHeight);
 
         }
-
        
+
+
     }
 }

@@ -275,7 +275,6 @@ namespace GameAttempt.Components
                     spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.FallSource, Color.White, 0f, Vector2.Zero, tiles.effect, 0f);
                     break;
                 case PlayerState.WALK:
-                    
                     spriteBatch.Draw(Sprite.SpriteImage, Sprite.BoundingRect, Sprite.WalkSource, Color.White, 0f, Vector2.Zero, tiles.effect, 0f);
                     break;
                 case PlayerState.FALL:

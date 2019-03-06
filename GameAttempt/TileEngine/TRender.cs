@@ -56,14 +56,14 @@ namespace GameAttempt
 			{   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  },
 			{   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  1,  1,  0,  0,  0,  0,  },
 			{   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  2,  2,  2,  1,  0,  0,  0,  },
-			{   1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  0,  0,  0,  0,  0,  1,  1,  1,  1,  1,  1,  1,  1,  1,  2,  2,  2,  2,  2,  1,  1,  1,  },
-			{   2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  1,  0,  0,  0,  1,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  },
-			{   2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  1,  1,  1,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  },
-			{   2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  },
-			{   2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  },
-			{   2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  },
-			{   2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  },
-			{   2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  },
+			{   9,  9,  9,  9,  1,  1,  1,  1,  1,  1,  0,  0,  0,  0,  0,  1,  1,  1,  1,  1,  1,  1,  1,  1,  2,  2,  2,  2,  2,  1,  1,  1,  },
+			{   9,  9,  9,  9,  2,  2,  2,  2,  2,  2,  1,  0,  0,  0,  1,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  },
+			{   9,  9,  9,  9,  2,  2,  2,  2,  2,  2,  2,  1,  1,  1,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  },
+			{   9,  9,  9,  9,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  },
+			{   9,  9,  9,  9,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  },
+			{   9,  9,  9,  9,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  },
+			{   9,  9,  9,  9,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  },
+			{   1,  1,  1,  1,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  },
 
 		};
 
@@ -79,14 +79,58 @@ namespace GameAttempt
 			tSheet = Game.Content.Load<Texture2D>
 										  ("Sprites/TileSheet3");    // get TileSheet
             bgText = Game.Content.Load<Texture2D>("Sprites/BackgroundWater");
-			// create a new tile from the TileSheet in list (locX, locY, IndexNum)
-			tRefs.Add(new TRef(0, 15, 0));   // blank space
-			tRefs.Add(new TRef(0, 0, 1));   // Ground with grass
-			tRefs.Add(new TRef(0, 1, 2));   // Ground 
+            // create a new tile from the TileSheet in list (locX, locY, IndexNum)
+            // Blank Space
+            tRefs.Add(new TRef(0, 15, 0));   // blank space
+           
+            // Level One tiles
+            tRefs.Add(new TRef(0, 0, 1 ));   // 1 Ground with grass			 
+            tRefs.Add(new TRef(1, 0, 2 ));   // 2 Left Rounded Ground  
+            tRefs.Add(new TRef(2, 0, 3 ));   // 3 Right Rounded Ground 
+            tRefs.Add(new TRef(3, 0, 4 ));   // 4 Rounded Ground
+            tRefs.Add(new TRef(4, 0, 5 ));   // 5 Right Slanted Edge
+            tRefs.Add(new TRef(5, 0, 6 ));   // 6 Left Slanted Edge
+            tRefs.Add(new TRef(6, 0, 7 ));   // 7 Left Slanted Ground
+            tRefs.Add(new TRef(7, 0, 8 ));   // 8 Right Slanted Ground
+            tRefs.Add(new TRef(0, 1, 9 ));   // 9 Ground without grass
+            tRefs.Add(new TRef(1, 1, 10 ));   // 10 Left Curved Ground
+            tRefs.Add(new TRef(2, 1, 11 ));   // 11 Right Curved Ground
+            tRefs.Add(new TRef(3, 1, 12 ));   // 12 Thin Square 
+            tRefs.Add(new TRef(4, 1, 13 ));   // 13 Rounded Thin Square  
+            tRefs.Add(new TRef(5, 1, 14 ));   // 14 Right Rounded Thin Square  
+            tRefs.Add(new TRef(6, 1, 15 ));   // 15 Left Rounded Thin Square
 
-			string[] tNames = { "Empty", "Ground1", "Ground2"}; // names of tiles
+            //// Level Two Tiles
+            //tRefs.Add(new TRef(0, 2, 16));   // 16 Ground with grass			 
+            //tRefs.Add(new TRef(1, 2, 17));   // 17 Left Rounded Ground  
+            //tRefs.Add(new TRef(2, 2, 18));   // 18 Right Rounded Ground 
+            //tRefs.Add(new TRef(3, 2, 19));   // 19 Rounded Ground
+            //tRefs.Add(new TRef(4, 2, 20));   // 20 Right Slanted Edge
+            //tRefs.Add(new TRef(5, 2, 21));   // 21 Left Slanted Edge
+            //tRefs.Add(new TRef(6, 2, 22));   // 22 Left Slanted Ground
+            //tRefs.Add(new TRef(7, 2, 23));   // 23 Right Slanted Ground
+            //tRefs.Add(new TRef(0, 3, 24));   // 24 Ground without grass
+            //tRefs.Add(new TRef(1, 3, 25));   // 25 Left Curved Ground
+            //tRefs.Add(new TRef(2, 3, 26));   // 26 Right Curved Ground
+            //tRefs.Add(new TRef(3, 3, 27));   // 27 Thin Square 
+            //tRefs.Add(new TRef(4, 3, 28));   // 28 Rounded Thin Square  
+            //tRefs.Add(new TRef(5, 3, 29));   // 29 Right Rounded Thin Square  
+            //tRefs.Add(new TRef(6, 3, 30));   // 30 Left Rounded Thin Square
+
+
+            string[] tNames = { "Empty", "GroundG", "LRGround",
+                                "RRGround", "RGround", "RSEdge",
+                                "LSEdge", "LSGround", "RSGround",
+                                "GroundNG", "LCEdge", "RCEdge",
+                                "SPlat", "RPLat", "RRPLat",
+                                "LRPlat" }; // names of tiles
 			
-			string[] impassableTiles = { "Ground1", "Ground2" };
+			string[] impassableTiles = { "GroundG", "LRGround",
+                                         "RRGround", "RGround", "RSEdge",
+                                         "LSEdge", "LSGround", "RSGround",
+                                         "LCEdge", "RCEdge","SPlat",
+                                         "RPLat", "RRPLat","LRPlat" };
+                                         
 
 			tsWidth = tSheet.Width / tsColumns;					// gets Width of tiles
 			tsHeight = tSheet.Height / tsRows;                  // gets Height of tiles
@@ -183,7 +227,7 @@ namespace GameAttempt
 													   (t.TRefs.TLocY * t.TileHeight),
 													   t.TileWidth,
 													   t.TileHeight),
-										 Color.White);
+										               Color.White);
 
 			}
 			foreach (var item in collisons)
