@@ -13,8 +13,10 @@ namespace GameAttempt
     public class Game1 : Game
     {
         GraphicsDeviceManager graphics;
-
         ServiceManager serviceManager;
+        TRender tiles;
+
+        public Song Lvl1Song;
 
         public Game1()
         {
@@ -31,13 +33,16 @@ namespace GameAttempt
 
         protected override void Initialize()
         {
-
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
+            //Audio
+            Lvl1Song = Content.Load<Song>("Audio/GreenGrave_mp3");
 
+            tiles = Services.GetService<TRender>();
+            tiles.BackgroundMusic = Lvl1Song;
         }
         protected override void UnloadContent()
         {

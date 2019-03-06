@@ -30,7 +30,7 @@ namespace GameAttempt
         //Camera camera;
 
         //Audio
-        Song lvl1Song;
+        public Song BackgroundMusic;
 
         //Level States
         public enum LevelStates { LevelOne, LevelTwo, LevelThree, LevelFour };
@@ -171,15 +171,30 @@ namespace GameAttempt
 
         public override void Initialize()
         {
+            //switch(_current)
+            //{
+            //    case LevelStates.LevelOne:
+            //        BackgroundMusic = Lvl1Song;
+            //        break;
+
+            //    case LevelStates.LevelTwo:
+            //        BackgroundMusic = Lvl1Song;
+            //        break;
+
+            //    case LevelStates.LevelThree:
+            //        BackgroundMusic = Lvl1Song;
+            //        break;
+
+            //    case LevelStates.LevelFour:
+            //        BackgroundMusic = Lvl1Song;
+            //        break;
+            //}
 
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            //Audio
-            lvl1Song = Game.Content.Load<Song>("Audio/GreenGrave_mp3");
-
             //Level Content
             LevelOneBkGrnd = Game.Content.Load<Texture2D>("Sprites/DinoParkBackgroundFinal");
             LevelTwoBkGrnd = Game.Content.Load<Texture2D>("Sprites/IceAgeLevel2Final");
@@ -256,12 +271,7 @@ namespace GameAttempt
             {
                 case LevelStates.LevelOne:
 
-                    if (lvl1Song != null)
-                    {
-                        MediaPlayer.Play(lvl1Song);
-                        MediaPlayer.Volume = .5f;
-                        MediaPlayer.IsRepeating = true;
-                    }
+                    PlayAudio(BackgroundMusic);
 
                     if (InputManager.IsButtonPressed(Buttons.RightTrigger))
                     {
@@ -274,6 +284,9 @@ namespace GameAttempt
                     break;
 
                 case LevelStates.LevelTwo:
+
+                    PlayAudio(BackgroundMusic);
+
                     if (InputManager.IsButtonPressed(Buttons.RightShoulder))
                     {
                         _current = LevelStates.LevelThree;
@@ -285,6 +298,9 @@ namespace GameAttempt
                     break;
 
                 case LevelStates.LevelThree:
+
+                    PlayAudio(BackgroundMusic);
+
                     if (InputManager.IsButtonPressed(Buttons.LeftTrigger))
                     {
                         _current = LevelStates.LevelFour;
@@ -296,6 +312,9 @@ namespace GameAttempt
                     break;
 
                 case LevelStates.LevelFour:
+
+                    PlayAudio(BackgroundMusic);
+
                     if (InputManager.IsButtonPressed(Buttons.LeftShoulder))
                     {
                         _current = LevelStates.LevelOne;
@@ -308,6 +327,16 @@ namespace GameAttempt
             }
 
             base.Update(gameTime);
+        }
+
+        public void PlayAudio(Song backgroundMusic)
+        {
+            if (MediaPlayer.State != MediaState.Playing)
+            {
+                MediaPlayer.Play(backgroundMusic);
+                MediaPlayer.Volume = .5f;
+                MediaPlayer.IsRepeating = true;
+            }
         }
 
         public override void Draw(GameTime gameTime)
