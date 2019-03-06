@@ -75,7 +75,7 @@ namespace Components
                 if (rect.X > 4 * spriteWidth)
                     WalkAnim.Add(rect);
             }
-
+         
         }
 
 
